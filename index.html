@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Money's Trading Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#2ecc8a; --green-dark:#1fa86d; --green-glow:rgba(46,204,138,0.18);
+  --bg:#0d0f0e; --surface:#131815; --surface2:#1a1f1c; --surface3:#212820;
+  --border:rgba(46,204,138,0.13); --border2:rgba(46,204,138,0.22);
+  --text:#e8f0ec; --muted:#6b7d73; --danger:#e05555; --warn:#e0a045;
+  --grade-a:#2ecc8a; --grade-b:#4ab8e8; --grade-c:#e0a045;
+  --blue:#4ab8e8; --purple:#a78bfa;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(46,204,138,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(46,204,138,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:0 20px 80px}
+
+/* HEADER */
+header{padding:28px 0 22px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border);margin-bottom:28px}
+.logo-mark{width:48px;height:48px;background:linear-gradient(135deg,var(--green-dark),var(--green));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;color:#0d0f0e;flex-shrink:0;box-shadow:0 0 20px var(--green-glow);letter-spacing:1px}
+.header-text h1{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--green);line-height:1}
+.header-text p{font-size:12px;color:var(--muted);margin-top:2px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.session-timer{font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--green);letter-spacing:2px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 16px}
+.session-timer.warning{color:var(--warn);border-color:rgba(224,160,69,0.3);animation:pulse 1s infinite}
+.timer-label{font-size:10px;color:var(--muted);text-align:center;margin-top:3px;letter-spacing:1px;text-transform:uppercase}
+.timer-controls{display:flex;gap:6px;flex-direction:column}
+.btn-sm{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.btn-sm:hover{border-color:var(--border2);color:var(--text)}
+.btn-sm.active-btn{background:rgba(46,204,138,0.12);border-color:var(--green-dark);color:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+
+/* NAV */
+.nav-tabs{display:flex;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:24px;overflow-x:auto;flex-wrap:nowrap}
+.nav-tab{flex:1;min-width:100px;padding:9px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap;text-align:center}
+.nav-tab.active{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#0d0f0e;font-weight:700;box-shadow:0 0 14px var(--green-glow)}
+.nav-tab:hover:not(.active){background:var(--surface2);color:var(--text)}
+
+/* PANEL */
+.panel{display:none;animation:fadeIn 0.22s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* SHARED */
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;margin-bottom:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.btn-primary{background:linear-gradient(135deg,var(--green-dark),var(--green));border:none;border-radius:9px;padding:11px 22px;color:#0d0f0e;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;box-shadow:0 0 12px var(--green-glow)}
+.btn-primary:hover{transform:scale(1.02);box-shadow:0 0 20px rgba(46,204,138,0.35)}
+.btn-ghost{background:none;border:1px solid var(--border);border-radius:9px;padding:9px 18px;color:var(--muted);font-size:13px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+input,select,textarea{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+select option{background:#1a1f1c}
+label{font-size:12px;color:var(--muted);font-weight:500;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px}
+.tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.tag-green{background:rgba(46,204,138,0.12);color:var(--green)}
+.tag-red{background:rgba(224,85,85,0.12);color:var(--danger)}
+.tag-warn{background:rgba(224,160,69,0.12);color:var(--warn)}
+.tag-blue{background:rgba(74,184,232,0.12);color:var(--blue)}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;text-align:center}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;margin:4px 0}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-state .ei{font-size:40px;margin-bottom:12px;opacity:0.4}
+.empty-state p{font-size:13px}
+
+/* ── Q&A COACH ── */
+.chat-window{background:var(--surface);border:1px solid var(--border);border-radius:14px;min-height:360px;max-height:460px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:10px;color:var(--muted);font-size:13px;text-align:center;padding:40px 0}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.msg-avatar{width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Bebas Neue',sans-serif}
+.msg.coach .msg-avatar{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#0d0f0e}
+.msg.user .msg-avatar{background:var(--surface3);color:var(--green)}
+.msg-bubble{max-width:80%;padding:11px 14px;border-radius:12px;font-size:13.5px;line-height:1.65}
+.msg.coach .msg-bubble{background:var(--surface2);border:1px solid var(--border)}
+.msg.user .msg-bubble{background:rgba(46,204,138,0.08);border:1px solid var(--border2)}
+.msg-bubble strong{color:var(--green)}
+.thinking{display:flex;gap:5px;align-items:center;padding:4px 0}
+.thinking span{width:7px;height:7px;border-radius:50%;background:var(--green);animation:bounce 1.1s infinite}
+.thinking span:nth-child(2){animation-delay:.18s}
+.thinking span:nth-child(3){animation-delay:.36s}
+@keyframes bounce{0%,80%,100%{transform:scale(0.5);opacity:0.3}40%{transform:scale(1);opacity:1}}
+.qa-input-row{display:flex;gap:10px;margin-top:10px}
+.qa-input{flex:1;resize:none;height:50px;border-radius:10px}
+.btn-send{background:linear-gradient(135deg,var(--green-dark),var(--green));border:none;border-radius:10px;width:50px;height:50px;color:#0d0f0e;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all 0.15s;flex-shrink:0;box-shadow:0 0 12px var(--green-glow)}
+.btn-send:hover{transform:scale(1.05)}
+.quick-questions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.quick-q{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.2s}
+.quick-q:hover{border-color:var(--green);color:var(--green);background:var(--green-glow)}
+.api-notice{background:rgba(224,160,69,0.07);border:1px solid rgba(224,160,69,0.18);border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:13px;color:var(--warn)}
+
+/* ── STRATEGY CARDS ── */
+.strategies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.strategy-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.2s}
+.strategy-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.strategy-card.open{border-color:var(--green)}
+.card-header{padding:15px 17px;display:flex;align-items:center;gap:11px}
+.card-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.card-title{font-weight:600;font-size:14px;line-height:1.2}
+.card-subtitle{font-size:11px;color:var(--muted);margin-top:2px}
+.card-chevron{margin-left:auto;color:var(--muted);font-size:14px;transition:transform 0.2s}
+.strategy-card.open .card-chevron{transform:rotate(180deg)}
+.card-body{display:none;padding:0 17px 17px;border-top:1px solid var(--border)}
+.strategy-card.open .card-body{display:block}
+.card-body p{font-size:13px;line-height:1.7;color:#c0ccc5;margin-top:12px}
+.pill-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid}
+.pill-green{background:rgba(46,204,138,0.08);border-color:rgba(46,204,138,0.25);color:var(--green)}
+.pill-red{background:rgba(224,85,85,0.08);border-color:rgba(224,85,85,0.25);color:var(--danger)}
+.pill-warn{background:rgba(224,160,69,0.08);border-color:rgba(224,160,69,0.25);color:var(--warn)}
+
+/* ── CHECKLIST ── */
+.checklist-layout{display:grid;grid-template-columns:260px 1fr;gap:18px}
+@media(max-width:700px){.checklist-layout{grid-template-columns:1fr}}
+.grade-btns{display:flex;gap:7px}
+.grade-btn{flex:1;padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:18px;cursor:pointer;transition:all 0.2s;text-align:center}
+.grade-btn[data-grade="A"].active{background:rgba(46,204,138,0.12);border-color:var(--green-dark);color:var(--grade-a)}
+.grade-btn[data-grade="B"].active{background:rgba(74,184,232,0.1);border-color:#2e8ab0;color:var(--grade-b)}
+.grade-btn[data-grade="C"].active{background:rgba(224,160,69,0.1);border-color:#a07030;color:var(--grade-c)}
+.score-display{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.score-number{font-family:'Bebas Neue',sans-serif;font-size:50px;line-height:1;margin:4px 0}
+.score-verdict{font-size:12px;font-weight:600;padding:3px 12px;border-radius:20px;display:inline-block}
+.verdict-go{background:rgba(46,204,138,0.15);color:var(--green)}
+.verdict-caution{background:rgba(224,160,69,0.15);color:var(--warn)}
+.verdict-no{background:rgba(224,85,85,0.15);color:var(--danger)}
+.checklist-main{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.checklist-section{border-bottom:1px solid var(--border)}
+.checklist-section:last-child{border-bottom:none}
+.cl-sec-hdr{padding:10px 15px;background:var(--surface2);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
+.check-item{display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid rgba(46,204,138,0.05);cursor:pointer;transition:background 0.15s}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{background:rgba(46,204,138,0.04)}
+.check-box{width:19px;height:19px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green)}
+.check-item.checked .check-box::after{content:'✓';font-size:11px;color:#0d0f0e;font-weight:700}
+.check-item.checked .check-text{color:var(--muted);text-decoration:line-through}
+.check-text{font-size:13px;line-height:1.4}
+.check-weight{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0}
+
+/* ── PSYCHOLOGY ── */
+.psych-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.psych-grid{grid-template-columns:1fr}}
+.psych-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px}
+.psych-card h3{font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.psych-card p,.psych-card li{font-size:13px;line-height:1.7;color:#c0ccc5}
+.psych-card ul{padding-left:14px;display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.mantra-box{background:linear-gradient(135deg,rgba(46,204,138,0.07),rgba(46,204,138,0.02));border:1px solid var(--border2);border-radius:13px;padding:22px;text-align:center;grid-column:1/-1}
+.mantra-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted)}
+.mantra-text{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--green);margin:10px 0 4px;line-height:1.3}
+.mantra-nav{display:flex;gap:8px;justify-content:center;margin-top:12px}
+
+/* ── QUIZ ── */
+.quiz-wrap{max-width:680px;margin:0 auto}
+.quiz-progress{height:4px;background:var(--surface2);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.quiz-progress-bar{height:100%;background:linear-gradient(90deg,var(--green-dark),var(--green));border-radius:2px;transition:width 0.4s ease}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:16px}
+.quiz-meta{font-size:11px;color:var(--muted);margin-bottom:12px;display:flex;gap:12px}
+.quiz-q{font-size:17px;font-weight:600;line-height:1.5;margin-bottom:22px}
+.quiz-options{display:flex;flex-direction:column;gap:9px}
+.quiz-opt{padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:13.5px;transition:all 0.15s;text-align:left;color:var(--text);font-family:'DM Sans',sans-serif}
+.quiz-opt:hover:not(.disabled){border-color:var(--border2);background:var(--surface3)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(46,204,138,0.1);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--danger);background:rgba(224,85,85,0.08);color:var(--danger)}
+.quiz-opt.disabled{cursor:default;pointer-events:none}
+.quiz-explanation{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;font-size:13px;line-height:1.65;color:#c0ccc5;display:none}
+.quiz-explanation.show{display:block}
+.quiz-explanation strong{color:var(--green)}
+.quiz-score-screen{text-align:center;padding:40px 20px}
+.quiz-score-big{font-family:'Bebas Neue',sans-serif;font-size:80px;line-height:1;color:var(--green)}
+.quiz-score-sub{font-size:15px;color:var(--muted);margin-top:6px}
+.quiz-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0}
+.quiz-badge{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid}
+.quiz-controls{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.quiz-cat-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.quiz-cat-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.quiz-cat-btn.active{background:rgba(46,204,138,0.1);border-color:var(--green);color:var(--green)}
+
+/* ── PRE-SESSION CHECK ── */
+.checkin-wrap{max-width:600px;margin:0 auto}
+.checkin-step{display:none}
+.checkin-step.active{display:block;animation:fadeIn 0.25s ease}
+.slider-wrap{margin:12px 0 4px}
+.range-slider{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--surface2);outline:none;cursor:pointer;border:none;padding:0}
+.range-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--green);cursor:pointer;box-shadow:0 0 8px var(--green-glow)}
+.slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+.slider-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--green);text-align:center;margin:6px 0}
+.yes-no-btns{display:flex;gap:10px;margin-top:10px}
+.yn-btn{flex:1;padding:13px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.yn-btn.yn-yes.selected{border-color:var(--danger);background:rgba(224,85,85,0.1);color:var(--danger)}
+.yn-btn.yn-no.selected{border-color:var(--green);background:rgba(46,204,138,0.1);color:var(--green)}
+.checkin-result{border-radius:14px;padding:24px;text-align:center;margin-top:20px}
+.checkin-result.ready{background:rgba(46,204,138,0.07);border:1px solid rgba(46,204,138,0.25)}
+.checkin-result.caution{background:rgba(224,160,69,0.07);border:1px solid rgba(224,160,69,0.25)}
+.checkin-result.noTrade{background:rgba(224,85,85,0.07);border:1px solid rgba(224,85,85,0.25)}
+.checkin-verdict{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;margin-bottom:8px}
+.checkin-advice{font-size:13.5px;line-height:1.7;color:#c0ccc5}
+.step-dots{display:flex;gap:7px;justify-content:center;margin-bottom:20px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);transition:all 0.2s}
+.step-dot.done{background:var(--green);border-color:var(--green)}
+.step-dot.current{background:var(--green-glow);border-color:var(--green);transform:scale(1.2)}
+
+/* ── DAILY PREP ── */
+.prep-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.prep-grid{grid-template-columns:1fr}}
+.prep-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px}
+.prep-card h3{font-size:13px;font-weight:600;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:0.8px}
+.prep-card textarea{height:90px;resize:none;font-size:13px;line-height:1.5}
+.market-bias-btns{display:flex;gap:8px;margin-bottom:12px}
+.bias-btn{flex:1;padding:9px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;text-align:center}
+.bias-btn.bull.active{border-color:var(--green);background:rgba(46,204,138,0.1);color:var(--green)}
+.bias-btn.bear.active{border-color:var(--danger);background:rgba(224,85,85,0.1);color:var(--danger)}
+.bias-btn.chop.active{border-color:var(--warn);background:rgba(224,160,69,0.1);color:var(--warn)}
+.levels-list{display:flex;flex-direction:column;gap:7px}
+.level-row{display:flex;gap:8px;align-items:center}
+.level-row input{flex:1}
+.level-type{width:70px;font-size:11px;padding:9px 6px;text-align:center}
+.btn-add-level{background:none;border:1px dashed var(--border);border-radius:8px;color:var(--muted);padding:8px;font-size:12px;cursor:pointer;width:100%;margin-top:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.btn-add-level:hover{border-color:var(--green);color:var(--green)}
+.btn-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;font-size:14px;transition:color 0.15s;flex-shrink:0}
+.btn-del:hover{color:var(--danger)}
+.risk-row{display:flex;gap:10px;align-items:center}
+.risk-row input{width:80px;text-align:center}
+.risk-row span{font-size:13px;color:var(--muted)}
+.prep-footer{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.saved-badge{font-size:12px;color:var(--green);opacity:0;transition:opacity 0.3s}
+.saved-badge.show{opacity:1}
+.prep-full-width{grid-column:1/-1}
+
+/* ── JOURNAL ── */
+.journal-layout{display:grid;grid-template-columns:360px 1fr;gap:18px}
+@media(max-width:800px){.journal-layout{grid-template-columns:1fr}}
+.journal-form{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.journal-form h3{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:2px}
+.form-row{display:flex;gap:10px}
+.form-row>*{flex:1}
+.pnl-input{font-family:'JetBrains Mono',monospace;font-size:15px;text-align:center}
+.pnl-input.pos{color:var(--green);border-color:rgba(46,204,138,0.3)}
+.pnl-input.neg{color:var(--danger);border-color:rgba(224,85,85,0.3)}
+.journal-log{display:flex;flex-direction:column;gap:10px;max-height:600px;overflow-y:auto}
+.trade-entry{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px 16px;cursor:pointer;transition:all 0.15s;position:relative}
+.trade-entry:hover{border-color:var(--border2)}
+.trade-entry.win{border-left:3px solid var(--green)}
+.trade-entry.loss{border-left:3px solid var(--danger)}
+.trade-entry.be{border-left:3px solid var(--muted)}
+.te-top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.te-setup{font-size:12px;font-weight:600}
+.te-date{font-size:11px;color:var(--muted);margin-left:auto}
+.te-pnl{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600}
+.te-pnl.pos{color:var(--green)}
+.te-pnl.neg{color:var(--danger)}
+.te-notes{font-size:12px;color:var(--muted);line-height:1.5;margin-top:4px}
+.te-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.del-trade{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;opacity:0;transition:opacity 0.15s}
+.trade-entry:hover .del-trade{opacity:1}
+.del-trade:hover{color:var(--danger)}
+
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:800px){.dash-grid{grid-template-columns:repeat(2,1fr)}}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px}
+.chart-wrap h3{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height 0.4s ease}
+.bar.profit{background:linear-gradient(180deg,var(--green),var(--green-dark))}
+.bar.loss{background:linear-gradient(180deg,var(--danger),#b03030)}
+.bar-label{font-size:10px;color:var(--muted);text-align:center}
+.bar-val{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.win-rate-ring{display:flex;justify-content:center;align-items:center;padding:10px 0}
+.ring-svg{transform:rotate(-90deg)}
+.setup-breakdown{display:flex;flex-direction:column;gap:8px}
+.setup-row{display:flex;align-items:center;gap:10px}
+.setup-name{font-size:12px;color:var(--muted);width:110px;flex-shrink:0}
+.setup-bar-bg{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.setup-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green-dark),var(--green));transition:width 0.5s ease}
+.setup-stat{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);width:40px;text-align:right;flex-shrink:0}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(46,204,138,0.2);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="logo-mark">J$</div>
+  <div class="header-text">
+    <h1>J Money's Trading Coach</h1>
+    <p>TWI Futures Playbook — Interactive Coaching System by @TWI_futures</p>
+  </div>
+  <div class="header-right">
+    <div>
+      <div class="session-timer" id="sessionTimer">00:00:00</div>
+      <div class="timer-label">Session Time</div>
+    </div>
+    <div class="timer-controls">
+      <button class="btn-sm active-btn" id="timerToggleBtn" onclick="toggleTimer()">⏸ Pause</button>
+      <button class="btn-sm" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <button class="nav-tab active"  onclick="switchTab('qa',this)">🤖 Coach</button>
+  <button class="nav-tab" onclick="switchTab('checkin',this)">🧘 Pre-Session</button>
+  <button class="nav-tab" onclick="switchTab('prep',this)">📅 Daily Prep</button>
+  <button class="nav-tab" onclick="switchTab('strategies',this)">📖 Strategies</button>
+  <button class="nav-tab" onclick="switchTab('checklist',this)">✅ Pre-Trade</button>
+  <button class="nav-tab" onclick="switchTab('quiz',this)">🎯 Quiz</button>
+  <button class="nav-tab" onclick="switchTab('journal',this)">📓 Journal</button>
+  <button class="nav-tab" onclick="switchTab('dashboard',this)">📈 Dashboard</button>
+  <button class="nav-tab" onclick="switchTab('psychology',this)">🧠 Psychology</button>
+</div>
+
+<!-- ══════════════ Q&A COACH ══════════════ -->
+<div id="panel-qa" class="panel active">
+  <div class="api-notice">⚡ <strong>J Money's AI Coach</strong> — powered by his full playbook. Ask anything about setups, entries, management, or concepts.</div>
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-empty" id="chatEmpty">
+      <div style="font-size:36px;opacity:0.4">💬</div>
+      <div>Ask me anything about J Money's TWI playbook.<br>I'm trained on all 4 of his documents.</div>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <p class="section-label">Quick Questions</p>
+    <div class="quick-questions">
+      <div class="quick-q" onclick="askQuick('What makes a quality failed breakdown?')">Quality FBD?</div>
+      <div class="quick-q" onclick="askQuick('How do I manage a trade after trimming at T1?')">Trade management?</div>
+      <div class="quick-q" onclick="askQuick('What is price acceptance and how do I read it?')">Price acceptance?</div>
+      <div class="quick-q" onclick="askQuick('When should I size up vs size down?')">Sizing rules?</div>
+      <div class="quick-q" onclick="askQuick('What is RSI hidden divergence and how do I use it?')">RSI divergence?</div>
+      <div class="quick-q" onclick="askQuick('What are the differences between bullish and bearish market strategies?')">Bull vs Bear?</div>
+      <div class="quick-q" onclick="askQuick('How do reclaim trades work?')">Reclaim trades?</div>
+      <div class="quick-q" onclick="askQuick('What is the difference between a shallow flush and deep flush FBD?')">Flush types?</div>
+    </div>
+  </div>
+  <div class="qa-input-row">
+    <textarea class="qa-input" id="qaInput" placeholder="Ask your coach anything..." onkeydown="handleEnter(event)"></textarea>
+    <button class="btn-send" onclick="sendMessage()">↑</button>
+  </div>
+</div>
+
+<!-- ══════════════ PRE-SESSION CHECK-IN ══════════════ -->
+<div id="panel-checkin" class="panel">
+  <div class="checkin-wrap">
+    <div class="step-dots" id="stepDots"></div>
+    <div id="checkinSteps"></div>
+  </div>
+</div>
+
+<!-- ══════════════ DAILY PREP ══════════════ -->
+<div id="panel-prep" class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <p class="section-label">Daily Prep Sheet — <span id="prepDate" style="color:var(--text)"></span></p>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span class="saved-badge" id="prepSavedBadge">✓ Saved</span>
+      <button class="btn-primary" onclick="savePrep()" style="padding:8px 18px;font-size:13px">Save Prep</button>
+    </div>
+  </div>
+  <div class="prep-grid">
+    <div class="prep-card">
+      <h3>📊 Market Bias</h3>
+      <div class="market-bias-btns">
+        <button class="bias-btn bull" onclick="setBias('bull',this)">🟢 Bullish</button>
+        <button class="bias-btn bear" onclick="setBias('bear',this)">🔴 Bearish</button>
+        <button class="bias-btn chop" onclick="setBias('chop',this)">🟡 Choppy</button>
+      </div>
+      <label>Weekly Trend Context</label>
+      <textarea id="prepBiasNotes" placeholder="Who's in control on the weekly? What's the HTF setup?"></textarea>
+    </div>
+    <div class="prep-card">
+      <h3>🎯 Key Levels to Watch</h3>
+      <div class="levels-list" id="levelsList"></div>
+      <button class="btn-add-level" onclick="addLevel()">+ Add Level</button>
+    </div>
+    <div class="prep-card">
+      <h3>🔍 Watchlist Setups</h3>
+      <textarea id="prepSetups" style="height:120px" placeholder="What setups are you watching today? FBD at X, backtest of Y, reclaim of Z..."></textarea>
+    </div>
+    <div class="prep-card">
+      <h3>💰 Risk Plan</h3>
+      <label>Daily Max Loss ($)</label>
+      <input type="number" id="prepMaxLoss" placeholder="e.g. 500">
+      <label style="margin-top:10px">Daily Profit Goal ($)</label>
+      <input type="number" id="prepProfitGoal" placeholder="e.g. 300">
+      <label style="margin-top:10px">Max Trades Today</label>
+      <input type="number" id="prepMaxTrades" placeholder="e.g. 3" value="3">
+    </div>
+    <div class="prep-card prep-full-width">
+      <h3>🧠 Mental Notes / Today's Focus</h3>
+      <textarea id="prepMindset" style="height:70px" placeholder="What do you need to focus on today? Any rules you've been breaking?"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ STRATEGIES ══════════════ -->
+<div id="panel-strategies" class="panel">
+  <p class="section-label">Setup Library — Click any card to expand</p>
+  <div class="strategies-grid" id="strategiesGrid"></div>
+</div>
+
+<!-- ══════════════ PRE-TRADE CHECKLIST ══════════════ -->
+<div id="panel-checklist" class="panel">
+  <div class="checklist-layout">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label>Setup Grade</label>
+        <div class="grade-btns">
+          <button class="grade-btn" data-grade="A" onclick="selectGrade('A')">A</button>
+          <button class="grade-btn" data-grade="B" onclick="selectGrade('B')">B</button>
+          <button class="grade-btn" data-grade="C" onclick="selectGrade('C')">C</button>
+        </div>
+      </div>
+      <div>
+        <label>Setup Type</label>
+        <select id="setupTypeSelect" onchange="renderChecklist()">
+          <option value="fbd">Failed Breakdown (FBD)</option>
+          <option value="backtest">Backtest</option>
+          <option value="breakout">Breakout / Breakdown</option>
+          <option value="continuation">Continuation Pattern</option>
+          <option value="reclaim">Reclaim</option>
+        </select>
+      </div>
+      <div class="score-display">
+        <div class="section-label">Conviction Score</div>
+        <div class="score-number" id="scoreNumber" style="color:var(--green)">0/0</div>
+        <div class="score-verdict verdict-no" id="scoreVerdict">No Criteria Checked</div>
+      </div>
+      <button class="btn-ghost" onclick="resetChecklist()" style="width:100%">↺ Reset</button>
+    </div>
+    <div class="checklist-main" id="checklistMain"></div>
+  </div>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div id="panel-quiz" class="panel">
+  <div class="quiz-wrap">
+    <div id="quizStartScreen">
+      <p class="section-label" style="margin-bottom:16px">Knowledge Tester — J Money's Playbook</p>
+      <div class="card" style="text-align:center;padding:32px">
+        <div style="font-size:48px;margin-bottom:12px">🎯</div>
+        <div style="font-size:20px;font-weight:700;margin-bottom:8px">Test Your Playbook Knowledge</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:24px">Flash-card style quizzes on J Money's exact rules. Pick a category or go all-in.</div>
+        <p class="section-label">Filter by Category</p>
+        <div class="quiz-cat-select" style="justify-content:center" id="quizCatSelect"></div>
+        <button class="btn-primary" onclick="startQuiz()" style="margin-top:8px;padding:13px 36px;font-size:15px">Start Quiz</button>
+      </div>
+      <div id="quizHistory" style="margin-top:18px"></div>
+    </div>
+    <div id="quizGame" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════ JOURNAL ══════════════ -->
+<div id="panel-journal" class="panel">
+  <div class="journal-layout">
+    <div class="journal-form">
+      <h3>Log a Trade</h3>
+      <div>
+        <label>Date</label>
+        <input type="date" id="tradeDate">
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Setup Type</label>
+          <select id="tradeSetup">
+            <option value="FBD">Failed Breakdown</option>
+            <option value="Backtest">Backtest</option>
+            <option value="Breakout">Breakout</option>
+            <option value="Breakdown">Breakdown</option>
+            <option value="Continuation">Continuation</option>
+            <option value="Reclaim">Reclaim</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label>Grade</label>
+          <select id="tradeGrade">
+            <option value="A">A Setup</option>
+            <option value="B">B Setup</option>
+            <option value="C">C Setup</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Entry Price</label>
+          <input type="number" id="tradeEntry" placeholder="5420.00" step="0.25">
+        </div>
+        <div>
+          <label>Exit Price</label>
+          <input type="number" id="tradeExit" placeholder="5435.00" step="0.25">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Contracts (#)</label>
+          <input type="number" id="tradeContracts" placeholder="4" min="1">
+        </div>
+        <div>
+          <label>P&L ($)</label>
+          <input type="number" id="tradePnl" placeholder="250.00" class="pnl-input" id="tradePnlInput" step="0.01">
+        </div>
+      </div>
+      <div>
+        <label>Followed Rules?</label>
+        <select id="tradeRules">
+          <option value="yes">✅ Yes — Executed the plan</option>
+          <option value="partial">⚠️ Partial — Small deviation</option>
+          <option value="no">❌ No — Broke rules</option>
+        </select>
+      </div>
+      <div>
+        <label>Notes / Lesson</label>
+        <textarea id="tradeNotes" style="height:75px" placeholder="What happened? What did you do well? What would you do differently?"></textarea>
+      </div>
+      <button class="btn-primary" onclick="logTrade()" style="width:100%">Log Trade</button>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <p class="section-label">Trade History</p>
+        <span id="journalSummary" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+      <div class="journal-log" id="journalLog">
+        <div class="empty-state"><div class="ei">📓</div><p>No trades logged yet.<br>Log your first trade to get started.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div id="panel-dashboard" class="panel">
+  <div class="dash-grid" id="dashStats"></div>
+  <div class="grid-2" style="gap:16px">
+    <div class="chart-wrap">
+      <h3>P&L by Day (Last 14 Days)</h3>
+      <div class="bar-chart" id="pnlChart"></div>
+    </div>
+    <div class="chart-wrap">
+      <h3>Win Rate</h3>
+      <div class="win-rate-ring" id="winRateRing"></div>
+    </div>
+    <div class="chart-wrap">
+      <h3>Performance by Setup Type</h3>
+      <div class="setup-breakdown" id="setupBreakdown"></div>
+    </div>
+    <div class="chart-wrap">
+      <h3>Rule Adherence</h3>
+      <div class="setup-breakdown" id="ruleAdherence"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PSYCHOLOGY ══════════════ -->
+<div id="panel-psychology" class="panel">
+  <div class="psych-grid">
+    <div class="mantra-box">
+      <div class="mantra-label">Daily Mindset Reminder</div>
+      <div class="mantra-text" id="mantraText">WAIT FOR THE SETUP. TRIM. TRAIL. STOP TRADING.</div>
+      <div class="mantra-nav">
+        <button class="btn-ghost" onclick="prevMantra()" style="padding:6px 14px;font-size:12px">← Prev</button>
+        <button class="btn-ghost" onclick="nextMantra()" style="padding:6px 14px;font-size:12px">Next →</button>
+      </div>
+    </div>
+    <div class="psych-card">
+      <h3>🎯 The Daily Goal</h3>
+      <p>Enter each session with one objective: find a <strong style="color:var(--green)">high conviction setup</strong> at a key level, execute your plan, take profit, and <strong style="color:var(--green)">stop trading</strong>.</p>
+      <ul style="margin-top:10px"><li>Identify the key level beforehand</li><li>Wait for the exact setup trigger</li><li>Trim majority at T1, lock in green</li><li>Trail runners, then walk away</li></ul>
+    </div>
+    <div class="psych-card">
+      <h3>🚫 What Destroys Accounts</h3>
+      <ul><li>Random trades — no setup, no entry</li><li>Trading in chop zones</li><li>Revenge trading after a loss</li><li>Full size after a win (greed)</li><li>Chasing breakouts / breakdown shorts</li><li>Not trimming when green</li><li>Fighting a strong trend</li><li>Ignoring the 7-pt red rule</li></ul>
+    </div>
+    <div class="psych-card">
+      <h3>📐 Sizing by Grade</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><span style="color:var(--grade-a);font-weight:700;width:20px">A</span><div style="flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--grade-a);border-radius:3px"></div></div><span style="color:var(--muted);font-size:12px">3% risk</span></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><span style="color:var(--grade-b);font-weight:700;width:20px">B</span><div style="flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="width:66%;height:100%;background:var(--grade-b);border-radius:3px"></div></div><span style="color:var(--muted);font-size:12px">2% risk</span></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px"><span style="color:var(--grade-c);font-weight:700;width:20px">C</span><div style="flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="width:33%;height:100%;background:var(--grade-c);border-radius:3px"></div></div><span style="color:var(--muted);font-size:12px">1% risk</span></div>
+      </div>
+      <p style="margin-top:12px;color:var(--danger);font-size:12px">⚠ Size DOWN after profits. 2nd trade = partial only. Binary events = reduced.</p>
+    </div>
+    <div class="psych-card">
+      <h3>⚡ The 7-Point Rule</h3>
+      <p>If you are up 7 points and have <strong style="color:var(--green)">NOT trimmed at T1</strong>, exit immediately. No trade goes red after 7 pts. This is non-negotiable.</p>
+    </div>
+    <div class="psych-card">
+      <h3>🧘 Pre-Trade Mental Check</h3>
+      <ul><li>Am I at a key area or the chop zone?</li><li>Have I waited for acceptance/trigger?</li><li>Is my stop placed correctly?</li><li>Do I have clear T1 and T2 targets?</li><li>Have I already profited today?</li><li>Is this FOMO or a real setup?</li><li>Is the trend with me or against me?</li></ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════
+let trades = JSON.parse(localStorage.getItem('twi_trades')||'[]');
+let prepData = JSON.parse(localStorage.getItem('twi_prep')||'{}');
+let quizHistory = JSON.parse(localStorage.getItem('twi_quiz')||'[]');
+let selectedGrade = null;
+let checkItems = [];
+let mantraIndex = 0;
+let timerRunning = true;
+let timerSeconds = 0;
+let timerInterval = null;
+let checkinAnswers = {};
+let currentQuizQ = 0;
+let quizQuestions = [];
+let quizScore = 0;
+let selectedQuizCats = [];
+let prepLevels = [];
+let prepBias = '';
+
+// ════════════════════════════════════════════════════
+// SESSION TIMER
+// ════════════════════════════════════════════════════
+function startTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    if(timerRunning){
+      timerSeconds++;
+      const h=Math.floor(timerSeconds/3600).toString().padStart(2,'0');
+      const m=Math.floor((timerSeconds%3600)/60).toString().padStart(2,'0');
+      const s=(timerSeconds%60).toString().padStart(2,'0');
+      const el=document.getElementById('sessionTimer');
+      el.textContent=`${h}:${m}:${s}`;
+      if(timerSeconds>=3*3600){el.classList.add('warning');}
+    }
+  },1000);
+}
+function toggleTimer(){
+  timerRunning=!timerRunning;
+  const btn=document.getElementById('timerToggleBtn');
+  btn.textContent=timerRunning?'⏸ Pause':'▶ Resume';
+  btn.className=timerRunning?'btn-sm active-btn':'btn-sm';
+}
+function resetTimer(){
+  timerSeconds=0;
+  timerRunning=true;
+  document.getElementById('sessionTimer').textContent='00:00:00';
+  document.getElementById('sessionTimer').classList.remove('warning');
+  document.getElementById('timerToggleBtn').textContent='⏸ Pause';
+  document.getElementById('timerToggleBtn').className='btn-sm active-btn';
+}
+startTimer();
+
+// ════════════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════════════
+function switchTab(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='strategies') renderStrategies();
+  if(name==='checklist') renderChecklist();
+  if(name==='dashboard') renderDashboard();
+  if(name==='journal') renderJournal();
+  if(name==='prep') initPrep();
+  if(name==='quiz') initQuizStart();
+  if(name==='checkin') initCheckin();
+}
+
+// ════════════════════════════════════════════════════
+// Q&A COACH
+// ════════════════════════════════════════════════════
+const PLAYBOOK_CONTEXT = `You are a trading coach for the TWI (Trade With Insight) futures community, built around the playbook created by J Money (@TWI_futures). Answer questions clearly, referencing his exact rules, numbers, and concepts. Be direct, practical, and encouraging.
+
+CORE PRINCIPLES: Focus on KEY supply/demand areas. Quality high conviction setups only. Adjust strategy based on who controls medium and short timeframes. Don't catch every trade. Protect profits. Strategy: wait for high conviction setup → trim into targets → trail runners → stop trading.
+
+TRADE MANAGEMENT: Grades: A=3% risk, B=2% risk, C=1% risk. Trim 1/2 to 3/4 at T1, move stop ~4pts below entry. Trim 1/8 at T2, trail runner under structure. No trade goes red after 7pts — if not trimmed at T1, exit. Stops ~10pts (min 8 in ES). FBD stop ~4pts under low. No full size after profits. 2nd trade = partial only. Size UP on strong untested areas and FBDs. Size DOWN on prior tested areas, breakouts/breakdowns, after profits, FOMC/CPI/NFP events.
+
+MES SCALING: 6 lots → 4@T1,1@T2,1 runner ($300). 8 lots → 5@T1,2@T2,1 runner ($400). 10 lots → 7@T1,2@T2,1 runner ($500). 18 lots → 14@T1,2@T2,2 runners ($900).
+ES SCALING: 4 lots → 3@T1,1@T2($2000). 6 lots → 4@T1,1@T2,1 runner($3000). 8 lots → 6@T1,1@T2,1 runner($4000).
+
+MARKET CYCLES: Consolidation→Trend→Backtest→Continuation→Consolidation. After breakout → level backtests → can direct bid. After breakdown → level backtests → can short. After first backtest, second test more likely to break through.
+
+BULLISH UPTREND (weekly buyers control): 90% longs. FBD of major demand → breakout of consolidation → backtest = direct bid. FBDs are BEST long setup. In steep uptrends, overnight flags/broadening patterns for entries. Breakdowns more likely to trap.
+
+BEARISH DOWNTREND (weekly sellers control): 70% shorts. Failed breakout of supply → breakdown of demand/trendline → backtest = front side short. Breakdowns/failed breakouts/front side shorts have higher win rate. Direct bids have high fail rate. Supports melt through.
+
+FAILED BREAKDOWN (FBD) — BEST SETUP: Price flushes overnight/intraday/daily low and reclaims. Buyers stops blown → artificial flush → sellers chase → get trapped → cover → longs chase → momentum. Entry: allow price to hold over low a few minutes, enter 3-5pts above low. Quality criteria: flush low set by 20+pt bounce, flush key support, flush 3+pts under low, occur after pullbacks NOT near range tops. Stop: ~4pts under lowest low. Higher win rate: low from 20+pt bounce, 5+pt flush below, immediate long wick, 20+pt flush into low. Lower win rate: sellers control, near top of uptrend without pullback, support already used up.
+
+FBD TYPES: SHALLOW FLUSH: 2-10pt flush, reclaims in 5-10min, no full backtest needed. DEEP FLUSH: >10pt flush, 15-60min reclaim, needs to reject backtest first. HIGH SPEED FLUSH: 2-10pt on headline/data, reclaim in <5min.
+
+FBD vs BREAKDOWN: In uptrend: always prefer FBD — breakdowns trap 70% of time. Watch FBD: any key low flushed, first/second test of key support, bottom of balance ranges. Watch breakdown: only at levels trapped multiple times, buyers exhausted, full acceptance, ideally only in downtrends.
+
+BREAKOUT/BREAKDOWN (HIGHEST RISK): Requires: level confirmation (prior tests + rejection), basing (price forms base), acceptance (multiple tests + time), break signal (entry = break of base). Levels need 1+ prior trap; prefer multiple. Best breakdowns have structure failure (trendline/bear flag) that breaks. If no bid left, rejects backtest = usually better entry.
+
+CONTINUATION PATTERNS: After strong trend moves, price consolidates into bull flags/triangles, typically overnight. Support/resistance need 2+ clear touches. Best entry: few pts above support after defense or failed breakdown. T1 = structure resistance; runners for pattern breakout.
+
+PRICE ACCEPTANCE: Determines if buying pressure stronger than supply. Two factors: testing area and returning + time spent without rejecting with follow through. NOT a signal by itself — need trigger after acceptance. Supply/Demand flip: prior supply flips to demand on backtest = very bullish. Time: FBD quick flush = 5-15min. Reclaims after breakdown = 15-30+min. Breakouts = multi-day consolidation on 1hr/4hr.
+
+RECLAIM TRADES: Level failed, flipped to resistance, then accepted and bidding higher. MUST use after first backtest rejected. Type 1: bases directly under level with equal highs 45+min, enter on push through 1pt above. Type 2: messy, chopping above/below, enter as price pushes 2-3+pts away.
+
+BALANCE RANGES: Choppy ranges after large trend moves with defined high/low. Fade the edges — long near range support, short near range resistance. Especially watch FBD of range low — tends to traverse entire range. Look above and fail at range high = targets range lows. Don't trade middle. After win: trim T1, hold runners, don't overtrade.
+
+RSI HIDDEN DIVERGENCE (5-period RSI on 15m/30m/1hr): NOT a signal alone — adds/subtracts conviction. BULLISH: RSI making LOWER LOW while price same or higher = potential energy for reversal/continuation. BEARISH: RSI making HIGHER HIGH while price lower = not much energy left, reversal likely. RSI overbought/oversold alone is NOT useful. Only divergence matters.
+
+PSYCHOLOGY: Goal: find one quality setup, profit, STOP. Don't give back gains. After profits: only A setups at smaller size. Size down during: volatility, CPI/PPI/FOMC/NFP/PCE, chop/OPEX, trend against you. NO RANDOM TRADES. Most chart patterns (H&S, double top, wedges, bear flags) have no real edge — 50/50 or worse. Best patterns: symmetrical triangles, bull flags, broadening formations, inverse H&S. Oversold alone is NOT a buy signal.`;
+
+async function sendMessage(){
+  const input=document.getElementById('qaInput');
+  const msg=input.value.trim();
+  if(!msg) return;
+  input.value='';
+  document.getElementById('chatEmpty').style.display='none';
+  appendMsg('user',msg);
+  const thinkId=appendMsg('coach',null,true);
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
+        system:PLAYBOOK_CONTEXT+"\n\nFormat clearly. Use **bold** for key terms. Be concise but precise. Always cite specific numbers/rules from the playbook.",
+        messages:[{role:"user",content:msg}]})
+    });
+    const data=await res.json();
+    updateMsg(thinkId,data.content?.[0]?.text||"Sorry, couldn't generate a response.");
+  }catch(e){updateMsg(thinkId,"Connection error. Make sure you're accessing this through Claude.ai.");}
+}
+function appendMsg(role,text,thinking=false){
+  const w=document.getElementById('chatWindow');
+  const id='msg-'+Date.now()+Math.random();
+  const avatar=role==='coach'?'J$':'YOU';
+  w.insertAdjacentHTML('beforeend',`<div class="msg ${role}" id="${id}"><div class="msg-avatar">${avatar}</div><div class="msg-bubble">${thinking?'<div class="thinking"><span></span><span></span><span></span></div>':formatMsg(text)}</div></div>`);
+  w.scrollTop=w.scrollHeight; return id;
+}
+function updateMsg(id,text){
+  const el=document.getElementById(id);
+  if(el) el.querySelector('.msg-bubble').innerHTML=formatMsg(text);
+  document.getElementById('chatWindow').scrollTop=9999;
+}
+function formatMsg(t){return t?t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'):''}
+function handleEnter(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function askQuick(q){document.getElementById('qaInput').value=q;sendMessage();}
+
+// ════════════════════════════════════════════════════
+// PRE-SESSION CHECK-IN
+// ════════════════════════════════════════════════════
+const CHECKIN_STEPS = [
+  {id:'sleep',type:'slider',q:'How rested do you feel today?',min:'Exhausted',max:'Fully Rested',minV:1,maxV:10,icon:'😴'},
+  {id:'emotion',type:'slider',q:'How emotionally neutral are you right now?',min:'Very Emotional',max:'Calm & Clear',minV:1,maxV:10,icon:'🧘'},
+  {id:'revenge',type:'yesno',q:'Are you carrying any revenge or frustration from recent losses?',yesLabel:'Yes — I want to make it back',noLabel:'No — Clean slate',yesIsBad:true,icon:'😤'},
+  {id:'plan',type:'yesno',q:'Have you reviewed the daily plan and key levels today?',yesLabel:'Yes — I know my levels',noLabel:'No — Haven\'t reviewed',yesIsBad:false,icon:'📋'},
+  {id:'fomo',type:'yesno',q:'Are you feeling FOMO or the urge to just be in a trade?',yesLabel:'Yes — I want to trade',noLabel:'No — I\'ll wait for setups',yesIsBad:true,icon:'⚡'},
+  {id:'capital',type:'yesno',q:'Are you trading with money you can afford to risk today?',yesLabel:'Yes — Risk capital only',noLabel:'No — Under financial stress',yesIsBad:false,icon:'💰'},
+];
+
+function initCheckin(){
+  checkinAnswers={};
+  const dots=document.getElementById('stepDots');
+  dots.innerHTML=CHECKIN_STEPS.map((_,i)=>`<div class="step-dot" id="dot-${i}"></div>`).join('');
+  showCheckinStep(0);
+}
+
+function showCheckinStep(idx){
+  if(idx>=CHECKIN_STEPS.length){showCheckinResult();return;}
+  CHECKIN_STEPS.forEach((_,i)=>{
+    const d=document.getElementById('dot-'+i);
+    d.className='step-dot'+(i<idx?' done':i===idx?' current':'');
+  });
+  const step=CHECKIN_STEPS[idx];
+  const container=document.getElementById('checkinSteps');
+  let inner='';
+  if(step.type==='slider'){
+    inner=`<div class="card" style="padding:28px">
+      <div style="font-size:36px;text-align:center;margin-bottom:12px">${step.icon}</div>
+      <div style="font-size:18px;font-weight:600;text-align:center;margin-bottom:24px;line-height:1.4">${step.q}</div>
+      <div class="slider-wrap">
+        <div class="slider-val" id="sliderVal">5</div>
+        <input type="range" class="range-slider" min="${step.minV}" max="${step.maxV}" value="5" oninput="document.getElementById('sliderVal').textContent=this.value" id="sliderInput">
+        <div class="slider-labels"><span>${step.min}</span><span>${step.max}</span></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:20px">
+        <button class="btn-primary" onclick="submitCheckinSlider(${idx},'${step.id}')">Next →</button>
+      </div>
+    </div>`;
+  } else {
+    inner=`<div class="card" style="padding:28px">
+      <div style="font-size:36px;text-align:center;margin-bottom:12px">${step.icon}</div>
+      <div style="font-size:18px;font-weight:600;text-align:center;margin-bottom:24px;line-height:1.4">${step.q}</div>
+      <div class="yes-no-btns">
+        <button class="yn-btn yn-yes" onclick="submitCheckinYN(${idx},'${step.id}',true,${step.yesIsBad})">${step.yesLabel}</button>
+        <button class="yn-btn yn-no" onclick="submitCheckinYN(${idx},'${step.id}',false,${step.yesIsBad})">${step.noLabel}</button>
+      </div>
+    </div>`;
+  }
+  container.innerHTML=`<div class="checkin-step active" style="max-width:520px;margin:0 auto">${inner}</div>`;
+}
+
+function submitCheckinSlider(idx,id){
+  checkinAnswers[id]=parseInt(document.getElementById('sliderInput').value);
+  showCheckinStep(idx+1);
+}
+function submitCheckinYN(idx,id,val,yesIsBad){
+  checkinAnswers[id]=yesIsBad?!val:val;
+  showCheckinStep(idx+1);
+}
+
+function showCheckinResult(){
+  document.querySelectorAll('.step-dot').forEach(d=>d.className='step-dot done');
+  const scores=Object.values(checkinAnswers);
+  const sliders=['sleep','emotion'].map(k=>checkinAnswers[k]||5);
+  const bools=['revenge','plan','fomo','capital'].map(k=>checkinAnswers[k]?1:0);
+  const avgSlider=(sliders[0]+sliders[1])/2;
+  const boolScore=(bools[0]+bools[1]+bools[2]+bools[3])/4*10;
+  const total=(avgSlider+boolScore)/2;
+  
+  let verdict,advice,cls,color;
+  if(total>=7){
+    verdict='🟢 READY TO TRADE';cls='ready';color='var(--green)';
+    advice='You\'re in a good mental state today. Stick to J Money\'s system — key areas only, wait for the setup trigger, trim at T1, and stop after your goal. Trust the process.';
+  } else if(total>=4.5){
+    verdict='🟡 TRADE WITH CAUTION';cls='caution';color='var(--warn)';
+    advice='Some mental flags today. Consider sizing down by 50% and limiting yourself to A setups only. One trade, done well, is better than three average ones. Be extra strict with your rules today.';
+  } else {
+    verdict='🔴 CONSIDER SITTING OUT';cls='noTrade';color='var(--danger)';
+    advice='Your mental state isn\'t ideal for trading today. The market will be there tomorrow. If you do trade, use smallest possible size on A setups only. Protect your capital and your psychology.';
+  }
+  
+  document.getElementById('checkinSteps').innerHTML=`
+    <div class="checkin-result ${cls}" style="max-width:520px;margin:0 auto">
+      <div class="checkin-verdict" style="color:${color}">${verdict}</div>
+      <div class="checkin-advice">${advice}</div>
+      <div style="display:flex;gap:14px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+        ${Object.entries(checkinAnswers).map(([k,v])=>`<div style="text-align:center"><div style="font-size:18px">${v===true||v>=7?'✅':v>=5?'🟡':'⚠️'}</div><div style="font-size:10px;color:var(--muted);margin-top:2px;text-transform:capitalize">${k}</div></div>`).join('')}
+      </div>
+      <button class="btn-ghost" onclick="initCheckin()" style="margin-top:18px;width:100%">↺ Redo Check-In</button>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════
+// DAILY PREP
+// ════════════════════════════════════════════════════
+function initPrep(){
+  const today=new Date();
+  document.getElementById('prepDate').textContent=today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('tradeDate').value=today.toISOString().split('T')[0];
+  const saved=prepData[today.toISOString().split('T')[0]]||{};
+  document.getElementById('prepBiasNotes').value=saved.biasNotes||'';
+  document.getElementById('prepSetups').value=saved.setups||'';
+  document.getElementById('prepMindset').value=saved.mindset||'';
+  document.getElementById('prepMaxLoss').value=saved.maxLoss||'';
+  document.getElementById('prepProfitGoal').value=saved.profitGoal||'';
+  document.getElementById('prepMaxTrades').value=saved.maxTrades||'3';
+  prepBias=saved.bias||'';
+  document.querySelectorAll('.bias-btn').forEach(b=>b.classList.remove('active'));
+  if(prepBias){const bb=document.querySelector(`.bias-btn.${prepBias}`);if(bb)bb.classList.add('active');}
+  prepLevels=saved.levels||[{type:'R',value:'',note:''}];
+  renderLevels();
+}
+
+function setBias(b,el){
+  prepBias=b;
+  document.querySelectorAll('.bias-btn').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function renderLevels(){
+  document.getElementById('levelsList').innerHTML=prepLevels.map((l,i)=>`
+    <div class="level-row">
+      <select class="level-type" onchange="prepLevels[${i}].type=this.value">
+        <option value="R" ${l.type==='R'?'selected':''}>🔴 Res</option>
+        <option value="S" ${l.type==='S'?'selected':''}>🟢 Sup</option>
+        <option value="K" ${l.type==='K'?'selected':''}>⭐ Key</option>
+        <option value="T" ${l.type==='T'?'selected':''}>🎯 Tgt</option>
+      </select>
+      <input type="number" step="0.25" value="${l.value}" placeholder="Level..." oninput="prepLevels[${i}].value=this.value" style="flex:1;min-width:80px">
+      <input type="text" value="${l.note}" placeholder="Note..." oninput="prepLevels[${i}].note=this.value" style="flex:2">
+      <button class="btn-del" onclick="prepLevels.splice(${i},1);renderLevels()">✕</button>
+    </div>`).join('');
+}
+
+function addLevel(){prepLevels.push({type:'K',value:'',note:''});renderLevels();}
+
+function savePrep(){
+  const today=new Date().toISOString().split('T')[0];
+  prepData[today]={
+    bias:prepBias,
+    biasNotes:document.getElementById('prepBiasNotes').value,
+    setups:document.getElementById('prepSetups').value,
+    mindset:document.getElementById('prepMindset').value,
+    maxLoss:document.getElementById('prepMaxLoss').value,
+    profitGoal:document.getElementById('prepProfitGoal').value,
+    maxTrades:document.getElementById('prepMaxTrades').value,
+    levels:prepLevels
+  };
+  localStorage.setItem('twi_prep',JSON.stringify(prepData));
+  const badge=document.getElementById('prepSavedBadge');
+  badge.classList.add('show');
+  setTimeout(()=>badge.classList.remove('show'),2000);
+}
+
+// ════════════════════════════════════════════════════
+// STRATEGIES
+// ════════════════════════════════════════════════════
+const STRATEGIES=[
+  {icon:'💥',bg:'rgba(46,204,138,0.1)',title:'Failed Breakdown (FBD)',subtitle:'Best long setup in the playbook',body:`<p>When price flushes an overnight, intraday, or daily low and reclaims. Buyers' stops blown → artificial flush → sellers get trapped → cover → longs add momentum.</p><p style="margin-top:8px"><strong>Entry:</strong> Hold over the low a few minutes, then enter 3–5 pts above the low.</p><p style="margin-top:6px"><strong>Stop:</strong> ~4 pts under lowest low.</p>`,pills:[{t:'20+ pt bounce low',c:'green'},{t:'5+ pt flush',c:'green'},{t:'After pullback',c:'green'},{t:'Near range top',c:'red'},{t:'Already FBD\'d',c:'red'},{t:'Sellers control',c:'red'}]},
+  {icon:'🔄',bg:'rgba(74,184,232,0.1)',title:'Backtest',subtitle:'Support/resistance flip trade',body:`<p>Buying an untested demand area — best on the <strong>first test</strong> of strong key support after a pullback. Also buying the first backtest of a pattern/balance break. Shorting the first backtest after a breakdown.</p>`,pills:[{t:'First test only',c:'green'},{t:'Strong key level',c:'green'},{t:'After pullback',c:'green'},{t:'Multiple prior tests',c:'red'},{t:'2nd+ test',c:'warn'}]},
+  {icon:'📊',bg:'rgba(224,160,69,0.08)',title:'Breakout / Breakdown',subtitle:'Highest risk — strict criteria required',body:`<p>The <strong>highest risk</strong> setup. Requires: level confirmation (prior tests + rejection), basing (price forms a base at level), acceptance (multiple tests + time), and break signal (entry = break of the base).</p><p style="margin-top:8px">If area has no bid left, it rejects the backtest — that's usually a better entry.</p>`,pills:[{t:'Multiple traps/bounces',c:'green'},{t:'Structure break',c:'green'},{t:'In downtrend',c:'green'},{t:'In uptrend',c:'red'},{t:'First test',c:'red'},{t:'No acceptance',c:'red'}]},
+  {icon:'🚩',bg:'rgba(160,100,230,0.08)',title:'Continuation Patterns',subtitle:'Bull flags, triangles, overnight structures',body:`<p>After strong trend moves, price consolidates into bull flags, triangles, or other structures — typically overnight. Support/resistance need <strong>2+ clear touches</strong>.</p><p style="margin-top:8px"><strong>Best entry:</strong> Few pts above support after a defense or failed breakdown of the pattern support. <strong>T1:</strong> Structure resistance.</p>`,pills:[{t:'2+ structure touches',c:'green'},{t:'After strong trend',c:'green'},{t:'FBD of support',c:'green'},{t:'1 touch only',c:'red'},{t:'Random levels',c:'red'}]},
+  {icon:'🔁',bg:'rgba(46,204,138,0.06)',title:'Reclaim Trades',subtitle:'Form of acceptance — after first rejection',body:`<p>Level failed, flipped to resistance, then accepted and bidding higher. <strong>Must come AFTER first backtest is rejected.</strong></p><p style="margin-top:8px"><strong>Clean:</strong> Bases under level with equal highs 45+ min → enter 1 pt above. <strong>Messy:</strong> Chop above/below → enter as price pushes 2–3+ pts away.</p>`,pills:[{t:'After first rejection',c:'green'},{t:'45+ min basing',c:'green'},{t:'Price pushes away',c:'green'},{t:'Before rejection',c:'red'},{t:'No basing time',c:'red'}]},
+  {icon:'🏔️',bg:'rgba(224,85,85,0.06)',title:'Balance Range Trades',subtitle:'Fade the edges, avoid the middle',body:`<p>Choppy ranges form after large trend moves. <strong>Fade the edges</strong> — long near range support, short rejections near range resistance.</p><p style="margin-top:8px">FBD of range low tends to traverse entire range targeting the highs. "Look above and fail" = targets traversal to range lows.</p>`,pills:[{t:'Range low FBD',c:'green'},{t:'Fade edges',c:'green'},{t:'Look below and fail',c:'green'},{t:'Trading middle',c:'red'},{t:'Overtrading after win',c:'red'}]}
+];
+
+function renderStrategies(){
+  document.getElementById('strategiesGrid').innerHTML=STRATEGIES.map((s,i)=>`
+    <div class="strategy-card" id="sc${i}" onclick="toggleStrategy(${i})">
+      <div class="card-header">
+        <div class="card-icon" style="background:${s.bg}">${s.icon}</div>
+        <div><div class="card-title">${s.title}</div><div class="card-subtitle">${s.subtitle}</div></div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-body">
+        ${s.body}
+        <div class="pill-list">${s.pills.map(p=>`<span class="pill pill-${p.c}">${p.c==='green'?'✓ ':p.c==='red'?'✗ ':'⚠ '}${p.t}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+}
+function toggleStrategy(i){document.getElementById('sc'+i).classList.toggle('open');}
+
+// ════════════════════════════════════════════════════
+// PRE-TRADE CHECKLIST
+// ════════════════════════════════════════════════════
+const CHECKLISTS={
+  fbd:[
+    {s:'Location Quality',items:[{t:'Price is at a key overnight, intraday, or prior day low',w:2},{t:'The low was set by a large bounce (15–20+ pts)',w:2},{t:'Price is after a pullback, NOT near the top of a range',w:2},{t:'This is the 1st or 2nd test of this support (not overused)',w:1}]},
+    {s:'Flush Quality',items:[{t:'Price flushed 3+ pts under the low (traps more shorts)',w:2},{t:'The flush happened quickly with a clear wick/rejection',w:1},{t:'Price did not accept below the low (stayed under < 5 min)',w:1}]},
+    {s:'Reclaim Confirmation',items:[{t:'Price has returned above the low and is holding',w:2},{t:'Waited 5–15 min of acceptance above the low',w:1},{t:'For deep flush (>10pt): first backtest of low has been rejected',w:1},{t:'Entry is 3–5 pts above the low after confirmation',w:1}]},
+    {s:'Context',items:[{t:'Trend on weekly is bullish (buyers control)',w:1},{t:'No immediate key resistance just above',w:1},{t:'RSI hidden divergence present (bonus conviction)',w:0}]}
+  ],
+  backtest:[
+    {s:'Level Quality',items:[{t:'Level is a strong key area from 4hr or 1hr chart',w:2},{t:'This is the FIRST test of this level after the break',w:2},{t:'Level has not been recently tested (fresh)',w:2}]},
+    {s:'Acceptance',items:[{t:'Price is holding at the level, not blowing through',w:1},{t:'Evidence of bidding — price pushed away from level',w:2},{t:'Time spent at level without follow-through rejection',w:1}]},
+    {s:'Trigger',items:[{t:'Acceptance confirmed (not just touching the level)',w:2},{t:'Price has pushed away from level for entry signal',w:2}]}
+  ],
+  breakout:[
+    {s:'Level Confirmation',items:[{t:'Level has been tested at least once with rejection/bounce',w:2},{t:'Multiple bounces/traps occurred (buyers exhausted)',w:2}]},
+    {s:'Basing & Acceptance',items:[{t:'Price has returned and is forming a base at level',w:2},{t:'Multi-day consolidation visible on 1hr or 4hr chart',w:2},{t:'No more buyers at this level (demand exhausted)',w:2}]},
+    {s:'Break Signal',items:[{t:'Clear break of the base structure (entry signal)',w:2},{t:'Structure break present (trendline / bear flag broke)',w:1},{t:'Ideally in a downtrend (higher win rate)',w:1}]}
+  ],
+  continuation:[
+    {s:'Pattern Validity',items:[{t:'Pattern support has 2+ clear touches',w:2},{t:'Pattern resistance has 2+ clear touches',w:2},{t:'Pattern formed after a strong trend move',w:2}]},
+    {s:'Entry Setup',items:[{t:'Price is near pattern support (not middle)',w:2},{t:'Evidence of defense or failed breakdown of support',w:2},{t:'Entry is a few pts above support after reclaim/defense',w:2}]},
+    {s:'Targets',items:[{t:'T1 is clear — pattern resistance level',w:1},{t:'Runner target is pattern breakout continuation',w:1}]}
+  ],
+  reclaim:[
+    {s:'Prerequisite',items:[{t:'Level has failed (flipped to resistance)',w:2},{t:'FIRST backtest of the failed level has been REJECTED',w:3}]},
+    {s:'Acceptance Phase',items:[{t:'Price has returned to the level after the rejection',w:2},{t:'Clean: basing near level with equal highs 45+ min',w:2},{t:'OR messy: chopping above and below area to accept',w:1}]},
+    {s:'Entry Trigger',items:[{t:'Clean reclaim: price pushes through 1 pt above level',w:2},{t:'Messy reclaim: price pushes 2–3+ pts away from area',w:2}]}
+  ]
+};
+
+function selectGrade(g){
+  selectedGrade=g;
+  document.querySelectorAll('.grade-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.grade-btn[data-grade="${g}"]`).classList.add('active');
+  updateScore();
+}
+
+function renderChecklist(){
+  const type=document.getElementById('setupTypeSelect').value;
+  const secs=CHECKLISTS[type]||[];
+  checkItems=[];
+  let html='';
+  secs.forEach((sec,si)=>{
+    html+=`<div class="checklist-section"><div class="cl-sec-hdr">${sec.s}</div>`;
+    sec.items.forEach((item,ii)=>{
+      const id=`ci-${si}-${ii}`;
+      checkItems.push({id,checked:false,weight:item.w,text:item.t});
+      html+=`<div class="check-item" id="${id}" onclick="toggleCheck('${id}')"><div class="check-box"></div><div class="check-text">${item.t}</div>${item.w>1?`<span class="check-weight">+${item.w}</span>`:''}</div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('checklistMain').innerHTML=html;
+  updateScore();
+}
+
+function toggleCheck(id){
+  const item=checkItems.find(i=>i.id===id);
+  if(!item) return;
+  item.checked=!item.checked;
+  document.getElementById(id).classList.toggle('checked',item.checked);
+  updateScore();
+}
+
+function resetChecklist(){
+  checkItems.forEach(item=>{item.checked=false;const el=document.getElementById(item.id);if(el)el.classList.remove('checked');});
+  updateScore();
+}
+
+function updateScore(){
+  const total=checkItems.reduce((s,i)=>s+i.weight,0);
+  const checked=checkItems.filter(i=>i.checked).reduce((s,i)=>s+i.weight,0);
+  const pct=total>0?Math.round((checked/total)*100):0;
+  const sn=document.getElementById('scoreNumber'),sv=document.getElementById('scoreVerdict');
+  sn.textContent=`${checked}/${total}`;
+  const gLabel=selectedGrade?`${selectedGrade}-Grade (${selectedGrade==='A'?'3%':selectedGrade==='B'?'2%':'1%'} risk)`:'Select a Grade';
+  if(pct>=80){sn.style.color='var(--green)';sv.className='score-verdict verdict-go';sv.textContent=`✓ TAKE IT — ${gLabel}`;}
+  else if(pct>=55){sn.style.color='var(--warn)';sv.className='score-verdict verdict-caution';sv.textContent='⚠ CAUTION — Keep Waiting';}
+  else if(checked>0){sn.style.color='var(--danger)';sv.className='score-verdict verdict-no';sv.textContent='✗ NOT READY — Keep Waiting';}
+  else{sn.style.color='var(--muted)';sv.className='score-verdict verdict-no';sv.textContent='No Criteria Checked';}
+}
+
+// ════════════════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════════════════
+const ALL_QUESTIONS=[
+  {cat:'FBD',q:'What is the ideal entry point for a failed breakdown?',opts:['Right at the low as it flushes','3–5 pts above the low after it holds','10 pts above the low for safety','At the next resistance level'],ans:1,exp:'J Money says to allow price to hold over the low for a few minutes, then entry is <strong>3–5 points above the low</strong>. This confirms the reclaim without chasing.'},
+  {cat:'FBD',q:'Where does the stop go on a failed breakdown?',opts:['10 pts below entry','At the session low','~4 pts under the lowest low','At the prior day low'],ans:2,exp:'The FBD stop always goes <strong>~4 pts under the lowest low</strong>. The setup is not invalidated until that level fails.'},
+  {cat:'FBD',q:'Which condition gives a failed breakdown the HIGHEST win rate?',opts:['The flush happens in a downtrend','The low being flushed saw a 20+ pt bounce','The area has been tested 3+ times','It occurs near the top of a range'],ans:1,exp:'<strong>Higher win rate when the low saw a very strong (20+ pt) bounce</strong>. This means more stops were placed below that level, creating a bigger fuel for the reversal.'},
+  {cat:'FBD',q:'When does a failed breakdown have a LOWER win rate?',opts:['In a weekly bullish uptrend','After a large pullback','Near the top of a high time frame uptrend without a pullback','When the flush is 5+ pts'],ans:2,exp:'<strong>Lower win rate when located near the top of high time frame uptrends without a pullback</strong>. FBDs work best after pullbacks, not at the highs.'},
+  {cat:'FBD',q:'A deep flush FBD (>10 pts) requires what before entry?',opts:['Immediate entry on any reclaim','5 minutes of acceptance above the low','A rejection of the backtest of the low first','Price to return to the prior day high'],ans:2,exp:'For a deep flush, the reclaim process takes 15–60 min. It <strong>needs to reject a backtest of the low (or attempt to reclaim and sell off) before entry</strong> — this is what distinguishes it from a shallow flush.'},
+  {cat:'Trade Management',q:'According to J Money, what is the rule if you are up 7 pts and have NOT trimmed at T1?',opts:['Hold tight — it might keep going','Add to the position','Exit immediately and consider re-entry later','Move stop to breakeven and wait'],ans:2,exp:'<strong>No trade goes red after 7 pts.</strong> If you haven\'t trimmed at T1, exit immediately and consider re-entry later. This is non-negotiable.'},
+  {cat:'Trade Management',q:'When trimming, what is the rule for T1?',opts:['Trim 1/4 at T1','Trim 1/2 to 3/4 at T1 and move stop ~4 pts below entry','Exit the full position at T1','Trim 1/8 at T1 and leave most running'],ans:1,exp:'<strong>Trim 1/2 to 3/4 at T1, then move stop ~4 pts below entry.</strong> This locks in profit and eliminates the risk of the trade going fully red.'},
+  {cat:'Trade Management',q:'What should you do with your trade sizing after you have already profited on a trade today?',opts:['Keep the same size — you\'re on a hot streak','Size up — use your profits to take more risk','No full size trades after profits — partial size only','Stop trading entirely, no exceptions'],ans:2,exp:'<strong>No full size trades after profits.</strong> A 2nd trade on an A setup should be only partial size. You are risking your gains, not fresh capital.'},
+  {cat:'Sizing',q:'What is the risk % for an A-grade setup?',opts:['1% of account','2% of account','3% of account','5% of account'],ans:2,exp:'Setup grades: <strong>A = 3% risk, B = 2% risk, C = 1% risk</strong>. Your size reflects your conviction level.'},
+  {cat:'Sizing',q:'When should you SIZE UP your position?',opts:['After a losing streak to recover faster','On strong untested areas and failed breakdowns','On areas with multiple prior tests','During FOMC and CPI announcements'],ans:1,exp:'<strong>Size UP on strong untested areas and failed breakdowns.</strong> These are the highest quality, highest conviction setups. Size DOWN on tested areas, breakouts, and binary events.'},
+  {cat:'Market Strategy',q:'In a bullish uptrend (weekly buyers control), what % of trades should be longs?',opts:['50%','70%','90%','100%'],ans:2,exp:'In a bullish uptrend, you <strong>typically want to be long for 90% of trades</strong>. The trend is your friend — work with it.'},
+  {cat:'Market Strategy',q:'In a bearish downtrend, which setups have the HIGHEST win rate?',opts:['Direct bids and breakouts','Failed breakdowns and direct bids','Breakdowns, failed breakouts, and front side shorts','Continuation patterns only'],ans:2,exp:'In downtrends, <strong>breakdowns, failed breakouts, and front side shorts have a higher win rate</strong>. Direct bids have a high fail rate — supports are more likely to melt through.'},
+  {cat:'Price Acceptance',q:'What are the TWO factors that define price acceptance?',opts:['Volume and time','Testing an area and returning, plus time spent at area without rejecting','Price crossing above a moving average twice','Two consecutive green candles closing above a level'],ans:1,exp:'Acceptance = <strong>(1) testing an area and returning</strong> + <strong>(2) time spent in an area without rejecting with follow-through</strong>. Both factors together indicate that supply/demand is being exhausted.'},
+  {cat:'Price Acceptance',q:'For a failed breakdown with a quick flush, how long should you see price hold above the reclaimed level?',opts:['30–60 minutes','1–2 hours','5–15 minutes','Only seconds — entry is immediate'],ans:2,exp:'For FBDs with a quick flush and reclaim, J Money wants to see <strong>5–15 minutes</strong> of time over the level being reclaimed for a day trade.'},
+  {cat:'Price Acceptance',q:'What does a supply/demand flip mean in terms of acceptance?',opts:['Price breaks above a level and immediately sells off','Prior supply flips to demand on a backtest — bidding from above','Two equal lows form at the same level','Price gaps over a resistance level'],ans:1,exp:'A <strong>supply/demand flip</strong> is when prior supply (resistance) flips to demand (support) on a backtest — bidding a prior supply from above is a very bullish indication of acceptance and continuation higher.'},
+  {cat:'RSI',q:'What RSI settings does J Money use for intraday analysis?',opts:['14-period RSI on 5m chart','5-period RSI on 15m, 30m, and 1hr chart','21-period RSI on 1hr chart','9-period RSI on 5m chart'],ans:1,exp:'J Money uses a <strong>5-period RSI on the 15m, 30m, and 1hr chart</strong> for intraday analysis. The shorter period makes it more sensitive and useful for hidden divergence detection.'},
+  {cat:'RSI',q:'What does BULLISH hidden divergence mean?',opts:['RSI making a higher high while price makes a lower high','RSI making a lower low while price is the same or higher','Price making a new high while RSI fails to make a new high','RSI crossing above the 50 level'],ans:1,exp:'<strong>Bullish hidden divergence: RSI is making a LOWER LOW while price is the same or higher.</strong> This means potential energy is building for a reversal or continuation higher.'},
+  {cat:'RSI',q:'Is RSI simply being oversold a buy signal in J Money\'s system?',opts:['Yes — oversold always means buy','Yes, but only in uptrends','No — only hidden divergence is useful, not just oversold/overbought readings','Yes, combined with a support level'],ans:2,exp:'<strong>RSI simply being oversold or overbought is NOT useful.</strong> Only HIDDEN DIVERGENCE is useful. This is a critical distinction — many traders make the mistake of treating oversold as a buy signal.'},
+  {cat:'Psychology',q:'After you have made a profit for the day, what is J Money\'s rule?',opts:['Keep trading — maximize the good days','Double your size while you\'re hot','Stop trading. You\'ve done your job.','Only take C setups for the rest of the day'],ans:2,exp:'<strong>After you have profited, stop trading.</strong> Make your money and enjoy your day — don\'t give it back. If you do trade more, it must be an A setup only and with smaller size risking only profits.'},
+  {cat:'Psychology',q:'According to the playbook, which chart patterns have actual statistical edge?',opts:['Head & shoulders, double tops, wedges','Bear flags and rising wedges','Symmetrical triangles, bull flags, broadening formations, inverse H&S','All classical chart patterns have equal edge'],ans:2,exp:'Most classical patterns (H&S, double tops/bottoms, wedges, bear flags) have little to no statistical predictive value. The patterns with an <strong>actual statistical edge are: symmetrical triangles, bull flags, broadening formations, and inverse H&S</strong>.'},
+  {cat:'Reclaims',q:'When can you enter a reclaim trade?',opts:['As soon as price returns to a failed level','Immediately after a level fails','Only after the first backtest of the failed level has been rejected','After price has been below the level for 2+ days'],ans:2,exp:'Reclaims <strong>must be used after the first backtest of a level failure has been rejected.</strong> You need that rejection as evidence that sellers are still active, making the eventual acceptance even more powerful.'},
+  {cat:'Balance Ranges',q:'In a balance range, what does "look above and fail" typically target?',opts:['A breakout to new highs','Traversal to range lows','The range midpoint pivot','The prior day high'],ans:1,exp:'When price looks above the range high and fails (a "false breakout"), this <strong>typically targets traversal to the range lows</strong>. This is a core concept for trading balance ranges.'},
+];
+
+const QUIZ_CATS=['All',...[...new Set(ALL_QUESTIONS.map(q=>q.cat))]];
+
+function initQuizStart(){
+  if(selectedQuizCats.length===0) selectedQuizCats=['All'];
+  document.getElementById('quizCatSelect').innerHTML=QUIZ_CATS.map(c=>`<button class="quiz-cat-btn ${selectedQuizCats.includes(c)?'active':''}" onclick="toggleQuizCat('${c}',this)">${c}</button>`).join('');
+  const hist=document.getElementById('quizHistory');
+  if(quizHistory.length>0){
+    const last=quizHistory[quizHistory.length-1];
+    hist.innerHTML=`<div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px"><div style="font-size:24px">📊</div><div><div style="font-size:13px;font-weight:600">Last Quiz: ${last.score}/${last.total} (${Math.round(last.score/last.total*100)}%)</div><div style="font-size:12px;color:var(--muted)">${new Date(last.date).toLocaleDateString()}</div></div></div>`;
+  }
+}
+
+function toggleQuizCat(cat,el){
+  if(cat==='All'){selectedQuizCats=['All'];document.querySelectorAll('.quiz-cat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');return;}
+  selectedQuizCats=selectedQuizCats.filter(c=>c!=='All');
+  if(selectedQuizCats.includes(cat)){selectedQuizCats=selectedQuizCats.filter(c=>c!==cat);el.classList.remove('active');}
+  else{selectedQuizCats.push(cat);el.classList.add('active');}
+  if(selectedQuizCats.length===0){selectedQuizCats=['All'];document.querySelectorAll('.quiz-cat-btn').forEach(b=>{b.classList.remove('active');if(b.textContent==='All')b.classList.add('active');});}
+}
+
+function startQuiz(){
+  let pool=selectedQuizCats.includes('All')?ALL_QUESTIONS:ALL_QUESTIONS.filter(q=>selectedQuizCats.includes(q.cat));
+  quizQuestions=pool.sort(()=>Math.random()-0.5).slice(0,Math.min(10,pool.length));
+  currentQuizQ=0; quizScore=0;
+  document.getElementById('quizStartScreen').style.display='none';
+  document.getElementById('quizGame').style.display='block';
+  showQuizQuestion();
+}
+
+function showQuizQuestion(){
+  if(currentQuizQ>=quizQuestions.length){showQuizEnd();return;}
+  const q=quizQuestions[currentQuizQ];
+  const pct=Math.round((currentQuizQ/quizQuestions.length)*100);
+  document.getElementById('quizGame').innerHTML=`
+    <div class="quiz-progress"><div class="quiz-progress-bar" style="width:${pct}%"></div></div>
+    <div class="quiz-card">
+      <div class="quiz-meta"><span class="tag tag-blue">${q.cat}</span><span style="margin-left:auto">Q${currentQuizQ+1} / ${quizQuestions.length}</span></div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz(${i},${q.ans})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}</div>
+      <div class="quiz-explanation" id="quizExp"><strong>Explanation:</strong> ${q.exp}</div>
+    </div>
+    <div class="quiz-controls" id="quizControls" style="display:none">
+      <button class="btn-primary" onclick="nextQuizQ()" style="padding:10px 24px">Next Question →</button>
+    </div>`;
+}
+
+function answerQuiz(chosen,correct){
+  document.querySelectorAll('.quiz-opt').forEach((o,i)=>{
+    o.classList.add('disabled');
+    if(i===correct) o.classList.add('correct');
+    else if(i===chosen&&chosen!==correct) o.classList.add('wrong');
+  });
+  if(chosen===correct) quizScore++;
+  document.getElementById('quizExp').classList.add('show');
+  document.getElementById('quizControls').style.display='flex';
+}
+
+function nextQuizQ(){currentQuizQ++;showQuizQuestion();}
+
+function showQuizEnd(){
+  const pct=Math.round((quizScore/quizQuestions.length)*100);
+  quizHistory.push({score:quizScore,total:quizQuestions.length,date:Date.now(),pct});
+  localStorage.setItem('twi_quiz',JSON.stringify(quizHistory));
+  let grade,msg;
+  if(pct>=90){grade='🏆 Excellent';msg='You know the playbook cold. Keep executing.';}
+  else if(pct>=75){grade='✅ Solid';msg='Good knowledge. Review the ones you missed.';}
+  else if(pct>=60){grade='📚 Review Needed';msg='Re-read the relevant playbook sections.';}
+  else{grade='🔄 Study Up';msg='Spend more time with the playbook before trading live.';}
+  document.getElementById('quizGame').innerHTML=`
+    <div class="quiz-score-screen card" style="padding:40px">
+      <div class="quiz-score-big">${quizScore}/${quizQuestions.length}</div>
+      <div style="font-size:24px;font-weight:700;margin:8px 0">${grade}</div>
+      <div class="quiz-score-sub">${pct}% correct — ${msg}</div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+        <button class="btn-primary" onclick="startQuiz()">Try Again</button>
+        <button class="btn-ghost" onclick="document.getElementById('quizStartScreen').style.display='block';document.getElementById('quizGame').style.display='none';initQuizStart()">Back to Menu</button>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════
+// JOURNAL
+// ════════════════════════════════════════════════════
+function logTrade(){
+  const date=document.getElementById('tradeDate').value;
+  const setup=document.getElementById('tradeSetup').value;
+  const grade=document.getElementById('tradeGrade').value;
+  const entry=parseFloat(document.getElementById('tradeEntry').value)||0;
+  const exit=parseFloat(document.getElementById('tradeExit').value)||0;
+  const contracts=parseInt(document.getElementById('tradeContracts').value)||1;
+  const pnlInput=document.getElementById('tradePnl').value;
+  const rules=document.getElementById('tradeRules').value;
+  const notes=document.getElementById('tradeNotes').value;
+  if(!date||!pnlInput){alert('Please fill in at least the date and P&L.');return;}
+  const pnl=parseFloat(pnlInput);
+  trades.unshift({id:Date.now(),date,setup,grade,entry,exit,contracts,pnl,rules,notes});
+  localStorage.setItem('twi_trades',JSON.stringify(trades));
+  document.getElementById('tradeEntry').value='';
+  document.getElementById('tradeExit').value='';
+  document.getElementById('tradeContracts').value='';
+  document.getElementById('tradePnl').value='';
+  document.getElementById('tradeNotes').value='';
+  renderJournal();
+}
+
+function deleteTrade(id){
+  trades=trades.filter(t=>t.id!==id);
+  localStorage.setItem('twi_trades',JSON.stringify(trades));
+  renderJournal();
+}
+
+function renderJournal(){
+  const log=document.getElementById('journalLog');
+  if(trades.length===0){log.innerHTML='<div class="empty-state"><div class="ei">📓</div><p>No trades logged yet.</p></div>';document.getElementById('journalSummary').textContent='';return;}
+  const totalPnl=trades.reduce((s,t)=>s+t.pnl,0);
+  const wins=trades.filter(t=>t.pnl>0).length;
+  document.getElementById('journalSummary').textContent=`${trades.length} trades · ${wins}W/${trades.length-wins}L · $${totalPnl>=0?'+':''}${totalPnl.toFixed(0)}`;
+  log.innerHTML=trades.map(t=>{
+    const cls=t.pnl>0?'win':t.pnl<0?'loss':'be';
+    const pnlCls=t.pnl>0?'pos':'neg';
+    const pnlStr=t.pnl>=0?`+$${t.pnl.toFixed(0)}`:`-$${Math.abs(t.pnl).toFixed(0)}`;
+    return `<div class="trade-entry ${cls}">
+      <button class="del-trade" onclick="event.stopPropagation();deleteTrade(${t.id})">✕</button>
+      <div class="te-top">
+        <span class="tag ${t.grade==='A'?'tag-green':t.grade==='B'?'tag-blue':'tag-warn'}">${t.grade}</span>
+        <span class="te-setup">${t.setup}</span>
+        <span class="te-pnl ${pnlCls}">${pnlStr}</span>
+        <span class="te-date">${t.date}</span>
+      </div>
+      ${t.notes?`<div class="te-notes">${t.notes}</div>`:''}
+      <div class="te-tags">
+        <span class="tag ${t.rules==='yes'?'tag-green':t.rules==='partial'?'tag-warn':'tag-red'}">${t.rules==='yes'?'✅ Rules Followed':t.rules==='partial'?'⚠️ Partial':'❌ Broke Rules'}</span>
+        ${t.contracts?`<span class="tag" style="background:var(--surface2);color:var(--muted)">${t.contracts} contracts</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════════
+function renderDashboard(){
+  if(trades.length===0){
+    document.getElementById('dashStats').innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="ei">📈</div><p>Log some trades in the Journal to see your dashboard.</p></div>';
+    document.querySelector('#panel-dashboard .grid-2').style.display='none';
+    return;
+  }
+  document.querySelector('#panel-dashboard .grid-2').style.display='grid';
+  const wins=trades.filter(t=>t.pnl>0);
+  const losses=trades.filter(t=>t.pnl<0);
+  const totalPnl=trades.reduce((s,t)=>s+t.pnl,0);
+  const winRate=Math.round((wins.length/trades.length)*100);
+  const avgWin=wins.length?wins.reduce((s,t)=>s+t.pnl,0)/wins.length:0;
+  const avgLoss=losses.length?losses.reduce((s,t)=>s+t.pnl,0)/losses.length:0;
+  const profitFactor=losses.length&&avgLoss!==0?Math.abs(avgWin/avgLoss):avgWin>0?'∞':0;
+  const streak=getStreak();
+
+  const statsData=[
+    {val:`${totalPnl>=0?'+':''}$${Math.abs(totalPnl).toFixed(0)}`,lbl:'Total P&L',color:totalPnl>=0?'var(--green)':'var(--danger)'},
+    {val:`${winRate}%`,lbl:'Win Rate',color:winRate>=55?'var(--green)':winRate>=45?'var(--warn)':'var(--danger)'},
+    {val:typeof profitFactor==='number'?profitFactor.toFixed(2):profitFactor,lbl:'Profit Factor',color:'var(--blue)'},
+    {val:`${streak.count}${streak.type==='win'?'W':'L'}`,lbl:'Current Streak',color:streak.type==='win'?'var(--green)':'var(--danger)'}
+  ];
+  document.getElementById('dashStats').innerHTML=statsData.map(s=>`<div class="stat-box"><div class="stat-lbl">${s.lbl}</div><div class="stat-val" style="color:${s.color}">${s.val}</div></div>`).join('');
+
+  // P&L chart
+  const last14=getLast14Days();
+  const maxAbs=Math.max(...last14.map(d=>Math.abs(d.pnl)),1);
+  document.getElementById('pnlChart').innerHTML=last14.map(d=>`
+    <div class="bar-col">
+      <div class="bar-val">${d.pnl!==0?(d.pnl>0?'+':'')+d.pnl.toFixed(0):''}</div>
+      <div class="bar ${d.pnl>=0?'profit':'loss'}" style="height:${Math.max((Math.abs(d.pnl)/maxAbs)*80,d.pnl!==0?8:2)}px"></div>
+      <div class="bar-label">${d.label}</div>
+    </div>`).join('');
+
+  // Win rate ring
+  const r=45,circ=2*Math.PI*r,dashArr=circ*(winRate/100),dashOff=circ*(1-(winRate/100));
+  document.getElementById('winRateRing').innerHTML=`<svg width="140" height="140" class="ring-svg">
+    <circle cx="70" cy="70" r="${r}" fill="none" stroke="var(--surface2)" stroke-width="10"/>
+    <circle cx="70" cy="70" r="${r}" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="${dashArr} ${circ-dashArr}" stroke-linecap="round"/>
+    <text x="70" y="68" text-anchor="middle" fill="var(--green)" font-family="Bebas Neue" font-size="26" transform="rotate(90,70,70)">${winRate}%</text>
+    <text x="70" y="82" text-anchor="middle" fill="var(--muted)" font-size="10" transform="rotate(90,70,70)">WIN RATE</text>
+  </svg>`;
+
+  // Setup breakdown
+  const setups=[...new Set(trades.map(t=>t.setup))];
+  const setupStats=setups.map(s=>{const st=trades.filter(t=>t.setup===s);const w=st.filter(t=>t.pnl>0).length;return{name:s,wr:Math.round(w/st.length*100),count:st.length};}).sort((a,b)=>b.wr-a.wr);
+  document.getElementById('setupBreakdown').innerHTML=setupStats.length?setupStats.map(s=>`<div class="setup-row"><div class="setup-name">${s.name}</div><div class="setup-bar-bg"><div class="setup-bar-fill" style="width:${s.wr}%"></div></div><div class="setup-stat">${s.wr}%</div></div>`).join(''):'<div style="color:var(--muted);font-size:13px;padding:10px 0">Log trades to see breakdown</div>';
+
+  // Rule adherence
+  const ruleData=[{k:'yes',lbl:'Rules Followed',color:'var(--green)'},{k:'partial',lbl:'Partial',color:'var(--warn)'},{k:'no',lbl:'Broke Rules',color:'var(--danger)'}];
+  document.getElementById('ruleAdherence').innerHTML=ruleData.map(r=>{const cnt=trades.filter(t=>t.rules===r.k).length;const pct2=Math.round(cnt/trades.length*100);return`<div class="setup-row"><div class="setup-name" style="color:${r.color}">${r.lbl}</div><div class="setup-bar-bg"><div class="setup-bar-fill" style="width:${pct2}%;background:${r.color}"></div></div><div class="setup-stat">${pct2}%</div></div>`;}).join('');
+}
+
+function getStreak(){
+  if(!trades.length) return{count:0,type:'win'};
+  const type=trades[0].pnl>=0?'win':'loss';
+  let count=0;
+  for(const t of trades){if((t.pnl>=0&&type==='win')||(t.pnl<0&&type==='loss'))count++;else break;}
+  return{count,type};
+}
+
+function getLast14Days(){
+  const days=[];
+  for(let i=13;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const key=d.toISOString().split('T')[0];
+    const dayTrades=trades.filter(t=>t.date===key);
+    const pnl=dayTrades.reduce((s,t)=>s+t.pnl,0);
+    days.push({label:d.toLocaleDateString('en-US',{month:'numeric',day:'numeric'}),pnl,key});
+  }
+  return days;
+}
+
+// ════════════════════════════════════════════════════
+// PSYCHOLOGY
+// ════════════════════════════════════════════════════
+const MANTRAS=['WAIT FOR THE SETUP. TRIM. TRAIL. STOP TRADING.','ONLY KEY AREAS. NO RANDOM TRADES. NO CHOP.','TRIM MAJORITY AT T1. NO TRADE GOES RED AFTER 7 PTS.','SIZE UP ON QUALITY. SIZE DOWN AFTER PROFITS.','A SETUP A DAY KEEPS THE BLOWN ACCOUNT AWAY.','THE MARKET WILL BE THERE TOMORROW. PROTECT TODAY.','PATIENCE IS YOUR EDGE. DISCIPLINE IS YOUR PROFIT.','FAILED BREAKDOWNS ARE THE BEST LONG SETUP.','DON\'T FIGHT STRONG TRENDS. ALIGN WITH THEM.','READ ACCEPTANCE BEFORE ENTRY. ALWAYS.','ONE GOOD TRADE BEATS FIVE BAD ONES EVERY TIME.','MAKE MONEY AND ENJOY YOUR DAY. STOP.'];
+function nextMantra(){mantraIndex=(mantraIndex+1)%MANTRAS.length;document.getElementById('mantraText').textContent=MANTRAS[mantraIndex];}
+function prevMantra(){mantraIndex=(mantraIndex-1+MANTRAS.length)%MANTRAS.length;document.getElementById('mantraText').textContent=MANTRAS[mantraIndex];}
+
+// ════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════
+renderChecklist();
+renderJournal();
+initPrep();
+</script>
+</body>
+</html>
