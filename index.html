@@ -288,6 +288,57 @@ label{font-size:12px;color:var(--muted);font-weight:500;display:block;margin-bot
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(46,204,138,0.2);border-radius:3px}
+
+/* ── DISCIPLINE / VIOLATIONS ── */
+.viol-layout{display:grid;grid-template-columns:340px 1fr;gap:18px}
+@media(max-width:800px){.viol-layout{grid-template-columns:1fr}}
+.scorecard-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.scorecard-item:last-child{border-bottom:none}
+.sc-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.sc-check.checked{background:var(--green);border-color:var(--green)}
+.sc-check.checked::after{content:'✓';font-size:12px;color:#0d0f0e;font-weight:700}
+.sc-label{font-size:13px;flex:1;line-height:1.3}
+.sc-points{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);flex-shrink:0}
+.viol-entry{background:var(--surface);border:1px solid rgba(224,85,85,0.2);border-left:3px solid var(--danger);border-radius:10px;padding:12px 14px;position:relative}
+.viol-entry .ve-type{font-size:13px;font-weight:600;color:var(--danger)}
+.viol-entry .ve-date{font-size:11px;color:var(--muted);margin-left:auto}
+.viol-entry .ve-notes{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+.viol-entry .ve-cost{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--danger);margin-top:4px}
+
+/* ── GLOSSARY ── */
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.glossary-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all 0.2s}
+.glossary-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.glossary-card.open{border-color:var(--green)}
+.gc-top{display:flex;align-items:center;gap:10px}
+.gc-term{font-size:14px;font-weight:700;flex:1}
+.gc-cat{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.gc-short{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+.gc-full{display:none;font-size:13px;color:#c0ccc5;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.7}
+.gc-full strong{color:var(--green)}
+.glossary-card.open .gc-full{display:block}
+.sotd-card{background:linear-gradient(135deg,rgba(46,204,138,0.08),rgba(46,204,138,0.02));border:1px solid var(--border2);border-radius:14px;padding:22px;display:flex;gap:18px;align-items:flex-start}
+.sotd-icon{font-size:36px;flex-shrink:0}
+.sotd-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--green);font-weight:600}
+.sotd-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;margin:4px 0}
+.sotd-body{font-size:13px;color:#c0ccc5;line-height:1.7}
+.sotd-body strong{color:var(--green)}
+
+/* ── WEEKLY REVIEW ── */
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.review-grid{grid-template-columns:1fr}}
+.review-grid .prep-card{margin:0}
+.week-rating-btn{width:38px;height:38px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);font-size:18px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.week-rating-btn.selected{border-color:var(--green);background:rgba(46,204,138,0.1);transform:scale(1.15)}
+.rv-rule-check{display:flex;align-items:center;gap:10px}
+.rv-rule-check input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
+.rv-rule-check label{font-size:13px;color:var(--muted);cursor:pointer;text-transform:none;letter-spacing:0}
+.past-review-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all 0.15s}
+.past-review-card:hover{border-color:var(--border2)}
+.prc-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.prc-week{font-size:13px;font-weight:600}
+.prc-pnl{font-family:'JetBrains Mono',monospace;font-size:13px}
+.prc-excerpt{font-size:12px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body>
@@ -321,6 +372,9 @@ label{font-size:12px;color:var(--muted);font-weight:500;display:block;margin-bot
   <button class="nav-tab" onclick="switchTab('journal',this)">📓 Journal</button>
   <button class="nav-tab" onclick="switchTab('dashboard',this)">📈 Dashboard</button>
   <button class="nav-tab" onclick="switchTab('psychology',this)">🧠 Psychology</button>
+  <button class="nav-tab" onclick="switchTab('violations',this)">⚠️ Discipline</button>
+  <button class="nav-tab" onclick="switchTab('glossary',this)">📚 Glossary</button>
+  <button class="nav-tab" onclick="switchTab('weeklyreview',this)">📝 Weekly Review</button>
 </div>
 
 <!-- ══════════════ Q&A COACH ══════════════ -->
@@ -599,6 +653,159 @@ label{font-size:12px;color:var(--muted);font-weight:500;display:block;margin-bot
       <h3>🧘 Pre-Trade Mental Check</h3>
       <ul><li>Am I at a key area or the chop zone?</li><li>Have I waited for acceptance/trigger?</li><li>Is my stop placed correctly?</li><li>Do I have clear T1 and T2 targets?</li><li>Have I already profited today?</li><li>Is this FOMO or a real setup?</li><li>Is the trend with me or against me?</li></ul>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════ DISCIPLINE / RULE VIOLATIONS ══════════════ -->
+<div id="panel-violations" class="panel">
+  <div class="viol-layout">
+
+    <!-- Left: Log a violation + scorecard -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- Daily Scorecard -->
+      <div class="card" style="padding:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h3 style="font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.8px">📊 Daily Scorecard</h3>
+          <span id="scorecardDate" style="font-size:11px;color:var(--muted)"></span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px" id="scorecardItems"></div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Discipline Score</div>
+            <div id="disciplineScore" style="font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--green);line-height:1">—</div>
+          </div>
+          <div id="disciplineGrade" style="font-family:'Bebas Neue',sans-serif;font-size:28px;padding:8px 16px;border-radius:10px;background:var(--surface2);letter-spacing:2px">—</div>
+        </div>
+        <button class="btn-primary" onclick="saveScorecard()" style="width:100%;margin-top:12px;padding:10px;font-size:13px">Save Today's Scorecard</button>
+      </div>
+
+      <!-- Log a violation -->
+      <div class="card" style="padding:18px">
+        <h3 style="font-size:13px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">⚠️ Log a Rule Violation</h3>
+        <label>Violation Type</label>
+        <select id="violType">
+          <option value="Random Trade">Random Trade — no setup, no plan</option>
+          <option value="Didn't Trim at T1">Didn't Trim at T1 — let winner reverse</option>
+          <option value="Traded in Chop">Traded in Chop — no key area</option>
+          <option value="Revenge Trade">Revenge Trade — emotional after loss</option>
+          <option value="Oversize After Profit">Oversize After Profit — didn't reduce</option>
+          <option value="Ignored 7-Pt Rule">Ignored 7-Pt Rule — went red after +7</option>
+          <option value="Chased Entry">Chased Entry — missed trigger, entered late</option>
+          <option value="Moved Stop">Moved Stop Further Away — broke stop rule</option>
+          <option value="Overtraded">Overtraded — too many trades in session</option>
+          <option value="Didn't Follow Plan">Didn't Follow Daily Prep Plan</option>
+          <option value="FOMO Entry">FOMO Entry — entered without trigger</option>
+          <option value="Other">Other</option>
+        </select>
+        <label style="margin-top:10px">What happened? (be honest)</label>
+        <textarea id="violNotes" style="height:70px" placeholder="Describe exactly what you did and why. The more honest, the more useful this becomes."></textarea>
+        <label style="margin-top:10px">Cost ($)</label>
+        <input type="number" id="violCost" placeholder="How much did this mistake cost? (optional)" step="0.01">
+        <button class="btn-ghost" onclick="logViolation()" style="width:100%;margin-top:10px;border-color:var(--danger);color:var(--danger)">Log Violation</button>
+      </div>
+    </div>
+
+    <!-- Right: Violation history + patterns -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <p class="section-label">Violation History & Patterns</p>
+        <span id="violSummary" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+
+      <!-- Pattern breakdown -->
+      <div class="card" style="padding:16px" id="violPatternCard">
+        <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Most Common Violations</div>
+        <div id="violPatterns" style="display:flex;flex-direction:column;gap:8px">
+          <div class="empty-state" style="padding:20px"><div class="ei" style="font-size:24px">📊</div><p>Log violations to see patterns</p></div>
+        </div>
+      </div>
+
+      <!-- Recent violations -->
+      <div class="journal-log" id="violLog" style="max-height:400px">
+        <div class="empty-state"><div class="ei">⚠️</div><p>No violations logged yet.<br>Honest tracking is the first step to fixing it.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ GLOSSARY + SETUP OF THE DAY ══════════════ -->
+<div id="panel-glossary" class="panel">
+
+  <!-- Setup of the Day -->
+  <div class="sotd-card" id="sotdCard" style="margin-bottom:20px"></div>
+
+  <!-- Search -->
+  <div style="position:relative;margin-bottom:16px">
+    <input type="text" id="glossarySearch" placeholder="Search any concept, term, or rule..." oninput="filterGlossary()" style="padding-left:36px">
+    <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px">🔍</span>
+  </div>
+
+  <!-- Category filter -->
+  <div class="quiz-cat-select" id="glossaryCats" style="margin-bottom:16px"></div>
+
+  <!-- Terms grid -->
+  <div id="glossaryGrid" class="glossary-grid"></div>
+</div>
+
+<!-- ══════════════ WEEKLY REVIEW ══════════════ -->
+<div id="panel-weeklyreview" class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div>
+      <p class="section-label">Weekly Review</p>
+      <div style="font-size:12px;color:var(--muted)" id="weekLabel"></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn-sm" onclick="prevWeek()">← Prev</button>
+      <button class="btn-sm" onclick="nextWeek()">Next →</button>
+      <span class="saved-badge" id="reviewSavedBadge">✓ Saved</span>
+      <button class="btn-primary" onclick="saveWeeklyReview()" style="padding:8px 18px;font-size:13px">Save Review</button>
+    </div>
+  </div>
+
+  <!-- Auto-stats from journal -->
+  <div class="dash-grid" id="weeklyStats" style="margin-bottom:18px"></div>
+
+  <div class="review-grid">
+    <div class="prep-card">
+      <h3>✅ What Worked This Week</h3>
+      <textarea id="rvWorked" style="height:110px" placeholder="Which setups did you execute well? What did you do right? Be specific."></textarea>
+    </div>
+    <div class="prep-card">
+      <h3>❌ What Didn't Work</h3>
+      <textarea id="rvDidnt" style="height:110px" placeholder="Where did you struggle? What setups gave you trouble? Any patterns of mistakes?"></textarea>
+    </div>
+    <div class="prep-card">
+      <h3>🧠 Psychology This Week</h3>
+      <textarea id="rvPsych" style="height:110px" placeholder="How was your discipline? Any revenge trading? FOMO? Did you follow the plan? Were you patient?"></textarea>
+    </div>
+    <div class="prep-card">
+      <h3>📐 Rule Adherence Review</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:10px" id="rvRuleChecks"></div>
+    </div>
+    <div class="prep-card">
+      <h3>🎯 Focus for Next Week</h3>
+      <textarea id="rvFocus" style="height:80px" placeholder="ONE specific thing to improve next week. Not five things — just one."></textarea>
+      <label style="margin-top:10px">Weekly P&L Goal ($)</label>
+      <input type="number" id="rvGoal" placeholder="e.g. 500">
+    </div>
+    <div class="prep-card">
+      <h3>💡 Lessons Learned</h3>
+      <textarea id="rvLessons" style="height:110px" placeholder="What did the market teach you this week? Any new insights about J Money's system you've gained?"></textarea>
+    </div>
+    <div class="prep-card" style="grid-column:1/-1">
+      <h3>⭐ Overall Week Rating</h3>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:4px">
+        <div id="weekRatingBtns" style="display:flex;gap:8px"></div>
+        <span id="weekRatingLabel" style="font-size:13px;color:var(--muted)"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Past reviews -->
+  <div style="margin-top:24px">
+    <p class="section-label" style="margin-bottom:12px">Past Weekly Reviews</p>
+    <div id="pastReviews" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
 </div>
 
@@ -1264,6 +1471,385 @@ function getLast14Days(){
 const MANTRAS=['WAIT FOR THE SETUP. TRIM. TRAIL. STOP TRADING.','ONLY KEY AREAS. NO RANDOM TRADES. NO CHOP.','TRIM MAJORITY AT T1. NO TRADE GOES RED AFTER 7 PTS.','SIZE UP ON QUALITY. SIZE DOWN AFTER PROFITS.','A SETUP A DAY KEEPS THE BLOWN ACCOUNT AWAY.','THE MARKET WILL BE THERE TOMORROW. PROTECT TODAY.','PATIENCE IS YOUR EDGE. DISCIPLINE IS YOUR PROFIT.','FAILED BREAKDOWNS ARE THE BEST LONG SETUP.','DON\'T FIGHT STRONG TRENDS. ALIGN WITH THEM.','READ ACCEPTANCE BEFORE ENTRY. ALWAYS.','ONE GOOD TRADE BEATS FIVE BAD ONES EVERY TIME.','MAKE MONEY AND ENJOY YOUR DAY. STOP.'];
 function nextMantra(){mantraIndex=(mantraIndex+1)%MANTRAS.length;document.getElementById('mantraText').textContent=MANTRAS[mantraIndex];}
 function prevMantra(){mantraIndex=(mantraIndex-1+MANTRAS.length)%MANTRAS.length;document.getElementById('mantraText').textContent=MANTRAS[mantraIndex];}
+
+// ════════════════════════════════════════════════════
+// RULE VIOLATIONS + DAILY SCORECARD
+// ════════════════════════════════════════════════════
+let violations = JSON.parse(localStorage.getItem('twi_violations')||'[]');
+let scorecards  = JSON.parse(localStorage.getItem('twi_scorecards')||'[]');
+let scChecked   = {};
+
+const SCORECARD_ITEMS = [
+  {id:'keyArea',    label:'Only traded at key supply/demand areas',      pts:15},
+  {id:'waitTrigger',label:'Waited for the setup trigger before entering', pts:15},
+  {id:'trimT1',     label:'Trimmed majority (½–¾) at T1',                pts:15},
+  {id:'stopPlaced', label:'Stop was placed correctly from the start',     pts:10},
+  {id:'noRandom',   label:'Zero random trades taken',                    pts:15},
+  {id:'noRevenge',  label:'No revenge trading after a loss',              pts:10},
+  {id:'sizeRule',   label:'Followed sizing rules (grade + after profit)', pts:10},
+  {id:'stoppedAfterGoal', label:'Stopped trading after hitting daily goal',pts:10},
+];
+
+function initViolations(){
+  const today=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  document.getElementById('scorecardDate').textContent=today;
+  const todayKey=new Date().toISOString().split('T')[0];
+  const saved=scorecards.find(s=>s.date===todayKey);
+  if(saved) scChecked=saved.checked||{};
+  else scChecked={};
+  renderScorecardItems();
+  renderViolations();
+}
+
+function renderScorecardItems(){
+  document.getElementById('scorecardItems').innerHTML=SCORECARD_ITEMS.map(item=>`
+    <div class="scorecard-item">
+      <div class="sc-check ${scChecked[item.id]?'checked':''}" id="sc-${item.id}" onclick="toggleSC('${item.id}')"></div>
+      <div class="sc-label">${item.label}</div>
+      <div class="sc-points">+${item.pts}</div>
+    </div>`).join('');
+  updateDisciplineScore();
+}
+
+function toggleSC(id){
+  scChecked[id]=!scChecked[id];
+  document.getElementById('sc-'+id).classList.toggle('checked',scChecked[id]);
+  updateDisciplineScore();
+}
+
+function updateDisciplineScore(){
+  const total=SCORECARD_ITEMS.reduce((s,i)=>s+i.pts,0);
+  const earned=SCORECARD_ITEMS.filter(i=>scChecked[i.id]).reduce((s,i)=>s+i.pts,0);
+  const pct=Math.round((earned/total)*100);
+  document.getElementById('disciplineScore').textContent=`${pct}%`;
+  let grade,color;
+  if(pct>=90){grade='A+';color='var(--green)';}
+  else if(pct>=80){grade='A';color='var(--green)';}
+  else if(pct>=70){grade='B';color='var(--blue)';}
+  else if(pct>=60){grade='C';color='var(--warn)';}
+  else{grade='D';color='var(--danger)';}
+  const dg=document.getElementById('disciplineGrade');
+  dg.textContent=grade; dg.style.color=color; dg.style.borderColor=color;
+  document.getElementById('disciplineScore').style.color=color;
+}
+
+function saveScorecard(){
+  const todayKey=new Date().toISOString().split('T')[0];
+  const total=SCORECARD_ITEMS.reduce((s,i)=>s+i.pts,0);
+  const earned=SCORECARD_ITEMS.filter(i=>scChecked[i.id]).reduce((s,i)=>s+i.pts,0);
+  const idx=scorecards.findIndex(s=>s.date===todayKey);
+  const entry={date:todayKey,checked:{...scChecked},score:Math.round((earned/total)*100)};
+  if(idx>=0) scorecards[idx]=entry; else scorecards.unshift(entry);
+  localStorage.setItem('twi_scorecards',JSON.stringify(scorecards));
+  const btn=document.querySelector('#panel-violations .btn-primary');
+  btn.textContent='✓ Saved!'; setTimeout(()=>btn.textContent='Save Today\'s Scorecard',2000);
+}
+
+function logViolation(){
+  const type=document.getElementById('violType').value;
+  const notes=document.getElementById('violNotes').value.trim();
+  const cost=parseFloat(document.getElementById('violCost').value)||0;
+  violations.unshift({id:Date.now(),date:new Date().toISOString().split('T')[0],type,notes,cost});
+  localStorage.setItem('twi_violations',JSON.stringify(violations));
+  document.getElementById('violNotes').value='';
+  document.getElementById('violCost').value='';
+  renderViolations();
+}
+
+function deleteViolation(id){
+  violations=violations.filter(v=>v.id!==id);
+  localStorage.setItem('twi_violations',JSON.stringify(violations));
+  renderViolations();
+}
+
+function renderViolations(){
+  const log=document.getElementById('violLog');
+  const summary=document.getElementById('violSummary');
+  if(violations.length===0){
+    log.innerHTML='<div class="empty-state"><div class="ei">⚠️</div><p>No violations logged yet.<br>Honest tracking is the first step.</p></div>';
+    summary.textContent='';
+    document.getElementById('violPatterns').innerHTML='<div class="empty-state" style="padding:20px"><div class="ei" style="font-size:24px">📊</div><p>Log violations to see patterns</p></div>';
+    return;
+  }
+  const totalCost=violations.filter(v=>v.cost>0).reduce((s,v)=>s+v.cost,0);
+  summary.textContent=`${violations.length} violations · $${totalCost.toFixed(0)} total cost`;
+
+  // Patterns
+  const counts={};
+  violations.forEach(v=>{counts[v.type]=(counts[v.type]||0)+1;});
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=sorted[0]?.[1]||1;
+  document.getElementById('violPatterns').innerHTML=sorted.map(([type,cnt])=>`
+    <div class="setup-row">
+      <div class="setup-name" style="color:var(--danger);width:180px">${type}</div>
+      <div class="setup-bar-bg" style="flex:1"><div class="setup-bar-fill" style="width:${(cnt/max)*100}%;background:var(--danger)"></div></div>
+      <div class="setup-stat" style="color:var(--danger)">${cnt}x</div>
+    </div>`).join('');
+
+  // List
+  log.innerHTML=violations.map(v=>`
+    <div class="viol-entry">
+      <button class="del-trade" onclick="deleteViolation(${v.id})" style="opacity:0.4">✕</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="ve-type">⚠️ ${v.type}</div>
+        <div class="ve-date">${v.date}</div>
+      </div>
+      ${v.notes?`<div class="ve-notes">${v.notes}</div>`:''}
+      ${v.cost?`<div class="ve-cost">-$${v.cost.toFixed(0)} cost</div>`:''}
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════
+// GLOSSARY + SETUP OF THE DAY
+// ════════════════════════════════════════════════════
+const GLOSSARY_TERMS=[
+  {term:'Failed Breakdown (FBD)',cat:'Setups',short:'Best long setup. Price flushes a low and reclaims — trapping shorts.',full:'The <strong>best long setup in the playbook</strong>. Price flushes an overnight, intraday, or prior day low, trapping short sellers, then reclaims above. Buyers\' stops are blown → artificial flush → sellers trapped → forced to cover → longs pile in. Entry: 3–5 pts above the reclaimed low. Stop: ~4 pts under the lowest low.'},
+  {term:'Backtest',cat:'Setups',short:'Buying the first re-test of a broken level as new support.',full:'After a level breaks higher, price returns to re-test it as support. The <strong>best entry is the first test</strong> — after that, each subsequent test weakens the level. Look for evidence of bidding (price pushing away from level). A backtest that is rejected from above = supply/demand flip, very bullish.'},
+  {term:'Breakout / Breakdown',cat:'Setups',short:'Price breaks through a level. Highest risk setup — strict criteria required.',full:'The <strong>highest risk setup</strong> in the playbook. Requires: (1) level confirmation with prior tests/rejections, (2) basing at the level, (3) acceptance — time spent with multiple tests, (4) break signal — entry = break of the base. Breakouts are better in uptrends; breakdowns better in downtrends. Best breakdowns have a structure failure (bear flag, trendline) that breaks.'},
+  {term:'Reclaim Trade',cat:'Setups',short:'After a level fails and backtests are rejected, price re-accepts and pushes higher.',full:'A <strong>form of acceptance</strong>. Level failed (flipped to resistance), first backtest was rejected, then price returns and begins bidding higher through the level. <strong>Must come AFTER the first backtest rejection</strong>. Clean reclaim = equal highs basing 45+ min under level → enter 1 pt above. Messy reclaim = chop above/below → enter as price pushes 2–3+ pts away.'},
+  {term:'Continuation Pattern',cat:'Setups',short:'Bull flags, triangles, overnight bases — after a strong trend move.',full:'After a strong trend move, price consolidates into a bull flag, triangle, or other structure — often overnight. Pattern support/resistance needs <strong>2+ clear touches</strong>. Best entry = few pts above support after defense or FBD of the pattern support. T1 = pattern resistance. Runners target pattern breakout continuation.'},
+  {term:'Balance Range',cat:'Concepts',short:'A choppy sideways range between a defined high and low. Fade the edges.',full:'A defined range that forms after a large trend move. <strong>Fade the edges</strong> — long near range support (especially FBDs of range low), short rejections at range resistance. The FBD of a range low tends to traverse all the way to range highs. "Look above and fail" = targets range lows. Do NOT trade the middle of a balance range.'},
+  {term:'Price Acceptance',cat:'Concepts',short:'Two factors: testing and returning + time at area without rejection.',full:'Price acceptance means buyers (or sellers) are comfortable at a level. Two factors: <strong>(1) testing the area and returning</strong>, and <strong>(2) time spent in the area without rejecting with follow-through</strong>. NOT a signal by itself — you still need a trigger after acceptance. FBD acceptance: 5–15 min. Reclaim after breakdown: 15–30+ min. Breakout: multi-day on 1hr/4hr.'},
+  {term:'Supply/Demand Flip',cat:'Concepts',short:'Prior resistance becomes support — or vice versa. Very bullish/bearish signal.',full:'When a prior supply zone (resistance) becomes demand (support) after a backtest — <strong>buyers are defending what was previously supply</strong>. This is a very bullish indication of acceptance and continuation higher. The reverse (demand flipping to supply) is very bearish. The flip is confirmed when price returns and bids from above the former resistance.'},
+  {term:'RSI Hidden Divergence',cat:'Indicators',short:'5-period RSI: bullish = RSI lower low while price same/higher. NOT just oversold.',full:'Uses a <strong>5-period RSI on 15m, 30m, or 1hr chart</strong>. <strong>Bullish hidden divergence</strong>: RSI makes a lower low while price is the same or higher — potential energy building for reversal or continuation. <strong>Bearish</strong>: RSI makes a higher high while price is lower — energy depleted, reversal likely. Oversold/overbought alone is NOT useful. Hidden divergence is a conviction add/subtract only — never a standalone signal.'},
+  {term:'7-Point Rule',cat:'Rules',short:'If up 7 pts and NOT trimmed at T1 — exit immediately. Non-negotiable.',full:'<strong>No trade goes red after 7 points of open profit</strong>. If you are up 7 pts and have not yet trimmed at T1, exit the entire position immediately and consider re-entry later. This rule eliminates the most painful experience in trading — watching a winner turn into a full loser.'},
+  {term:'Trim at T1',cat:'Rules',short:'Remove ½ to ¾ of the position at first target. Move stop ~4 pts below entry.',full:'When price reaches T1 (first target), <strong>trim ½ to ¾ of the position</strong> and move your stop to ~4 pts below entry. This locks in profit, eliminates the risk of a full loser, and lets you hold runners for T2 and beyond. At T2, trim another ⅛, then trail the runner under structure. The goal is to never give back a meaningful winner.'},
+  {term:'Sizing by Grade',cat:'Rules',short:'A = 3% risk, B = 2%, C = 1%. Size down after profits. Never full size twice.',full:'<strong>A-grade setup = 3% account risk. B-grade = 2%. C-grade = 1%.</strong> After you have already profited in a session, the second trade (if taken) should only be partial size — you are risking your gains, not fresh capital. Size UP on strong untested areas and FBDs. Size DOWN on tested areas, during binary events (CPI/FOMC/NFP), in chop, and after profits.'},
+  {term:'Deep Flush FBD',cat:'Setups',short:'>10 pt flush. Takes 15–60 min. Needs backtest rejection before entry.',full:'A flush greater than 10 points below a key low. The reclaim process takes <strong>15–60 minutes</strong>. Unlike a shallow flush, a deep flush requires waiting for price to reject a backtest of the low (or attempt to reclaim and sell off) before entering. This confirms that the flush was a trap and that buyers are genuinely in control.'},
+  {term:'Shallow Flush FBD',cat:'Setups',short:'2–10 pt flush. Reclaims in 5–10 min. No backtest needed.',full:'A flush of 2–10 points below a key low that reclaims quickly in <strong>5–10 minutes</strong>. Does not require a full backtest before entry. Watch for immediate reclaim with a clear long wick. Entry 3–5 pts above the low after it holds. Higher win rate when flush is at a level set by a very large bounce (20+ pts).'},
+  {term:'High Speed Flush',cat:'Setups',short:'Catalyst-driven. <5 min reclaim. Headline/data spike that immediately recovers.',full:'A fast flush driven by a headline, economic data release, or sudden selling. The flush and reclaim happen in <strong>less than 5 minutes</strong>. The speed indicates that the move was driven by forced selling or algorithms, not genuine bearishness. Enter quickly after reclaim is confirmed — these can move fast.'},
+  {term:'Front Side Short',cat:'Market Strategy',short:'Shorting into strength in a downtrend — selling the first backtest after breakdown.',full:'In a downtrend, after a key level breaks down, price often backtests the former support (now resistance) from below. <strong>Shorting this backtest from the front side</strong> (as price pushes up into resistance) has a high win rate in downtrends. The opposite of buying a backtest in an uptrend. Front side shorts are one of J Money\'s preferred setups in bearish conditions.'},
+  {term:'Market Cycle',cat:'Concepts',short:'Consolidation → Trend → Backtest → Continuation → Consolidation.',full:'Price moves in a repeating cycle: <strong>Consolidation</strong> (balance range) → <strong>Trend</strong> (breakout/breakdown from balance) → <strong>Backtest</strong> (first re-test of broken level) → <strong>Continuation</strong> (trend resumes) → <strong>New Consolidation</strong>. Understanding which phase you are in determines which setups have the highest win rate. After a breakout and backtest, direct bids have higher win rate. After a first backtest, second tests are more likely to break.'},
+  {term:'Profit Factor',cat:'Analytics',short:'Average winner ÷ average loser. Above 1.5 is healthy. Above 2.0 is excellent.',full:'<strong>Profit Factor = (Total Wins) ÷ (Total Losses)</strong>. A profit factor above 1.0 means you make more than you lose overall. Above 1.5 is healthy. Above 2.0 is excellent. J Money\'s system aims for this by trimming at T1 (locking in winners) and cutting losers quickly at the defined stop. A high win rate with bad profit factor = still losing money.'},
+  {term:'Chop Zone',cat:'Concepts',short:'The middle of a range or undefined area. No edge here — stay out.',full:'A <strong>chop zone is any area without a clear key level or defined edge</strong>. The middle of a balance range, the area between clear support and resistance, or any area that hasn\'t shown consistent bounces or rejections. Trading in the chop zone is one of the fastest ways to drain an account — small, random losses that add up. J Money says: key areas only.'},
+  {term:'Binary Event',cat:'Risk',short:'CPI, FOMC, NFP, PCE — unpredictable catalyst days. Size down significantly.',full:'Economic data releases that can cause sudden, unpredictable moves: <strong>CPI, PPI, FOMC, NFP, PCE</strong>. On these days, size down significantly — J Money recommends much smaller position sizes because the initial move is often noise and can stop you out before the real direction is established. After the data settles, look for FBDs or acceptance of the post-data range.'},
+];
+
+const GLOSSARY_CATS=['All',...new Set(GLOSSARY_TERMS.map(t=>t.cat))];
+let activeCat='All';
+let glossaryOpen={};
+
+const SOTD_SETUPS=[
+  {icon:'💥',name:'Failed Breakdown (FBD)',body:'<strong>Today\'s focus:</strong> The best long setup. Wait for a flush of a key overnight or intraday low, then watch for 5–15 min of acceptance above the reclaimed level before entering 3–5 pts above the low. Stop goes ~4 pts under the lowest low. Quality flush = set by a 20+ pt bounce, 5+ pts under key support, occurs after a pullback.'},
+  {icon:'🔄',name:'Backtest Trade',body:'<strong>Today\'s focus:</strong> Buy the first re-test of a broken level. Wait for evidence of bidding — price should push away from the area after touching it. Best on fresh, untested levels. The supply/demand flip (prior resistance now acting as support) is one of the most bullish confirmations you can see.'},
+  {icon:'📊',name:'Breakout / Breakdown',body:'<strong>Today\'s focus:</strong> The highest risk setup — don\'t rush it. You need basing, acceptance (multi-day on 1hr/4hr), and a clear structure break. If no bid is left and the backtest is rejected, that\'s often your best entry — not the initial break.'},
+  {icon:'🔁',name:'Reclaim Trade',body:'<strong>Today\'s focus:</strong> After a level fails, wait for the first backtest to be rejected. THEN watch for acceptance above. Clean = 45+ min of equal highs basing, enter 1 pt above. Messy = wait for price to push 2–3+ pts away from the area before entering.'},
+  {icon:'🚩',name:'Continuation Pattern',body:'<strong>Today\'s focus:</strong> Look for overnight consolidation in bull flags or triangles after a strong move. You need 2+ clear touches on both support and resistance. Best entry is a defense of pattern support or an FBD of pattern support. T1 = pattern resistance. Runners for the breakout.'},
+  {icon:'🏔️',name:'Balance Range Trade',body:'<strong>Today\'s focus:</strong> Fade the edges only. FBD of range low targets range high. Rejection at range high targets range low. Do NOT trade the middle. If price looks above the range and fails, that\'s a high probability short targeting the range lows.'},
+];
+
+function initGlossary(){
+  // SOTD — based on day of week
+  const sotd=SOTD_SETUPS[new Date().getDay()%SOTD_SETUPS.length];
+  document.getElementById('sotdCard').innerHTML=`
+    <div class="sotd-icon">${sotd.icon}</div>
+    <div>
+      <div class="sotd-label">Setup of the Day</div>
+      <div class="sotd-name">${sotd.name}</div>
+      <div class="sotd-body">${sotd.body}</div>
+    </div>`;
+
+  // Category pills
+  document.getElementById('glossaryCats').innerHTML=GLOSSARY_CATS.map(c=>`
+    <button class="quiz-cat-btn ${c===activeCat?'active':''}" onclick="setGlossaryCat('${c}',this)">${c}</button>`).join('');
+  renderGlossary();
+}
+
+function setGlossaryCat(cat,el){
+  activeCat=cat;
+  document.querySelectorAll('#glossaryCats .quiz-cat-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderGlossary();
+}
+
+function filterGlossary(){renderGlossary();}
+
+function renderGlossary(){
+  const q=(document.getElementById('glossarySearch')?.value||'').toLowerCase();
+  const filtered=GLOSSARY_TERMS.filter(t=>{
+    const catMatch=activeCat==='All'||t.cat===activeCat;
+    const textMatch=!q||t.term.toLowerCase().includes(q)||t.short.toLowerCase().includes(q)||t.full.toLowerCase().includes(q);
+    return catMatch&&textMatch;
+  });
+  const catColors={'Setups':'tag-green','Concepts':'tag-blue','Rules':'tag-warn','Indicators':'tag-blue','Risk':'tag-red','Analytics':'tag-blue','Market Strategy':'tag-warn'};
+  document.getElementById('glossaryGrid').innerHTML=filtered.length?filtered.map((t,i)=>`
+    <div class="glossary-card ${glossaryOpen[t.term]?'open':''}" onclick="toggleGlossaryCard('${t.term.replace(/'/g,'\\\'')}')" id="gc-${i}">
+      <div class="gc-top">
+        <div class="gc-term">${t.term}</div>
+        <span class="tag ${catColors[t.cat]||'tag-blue'} gc-cat">${t.cat}</span>
+      </div>
+      <div class="gc-short">${t.short}</div>
+      <div class="gc-full">${t.full}</div>
+    </div>`).join(''):'<div class="empty-state" style="grid-column:1/-1"><div class="ei">🔍</div><p>No terms match your search.</p></div>';
+}
+
+function toggleGlossaryCard(term){
+  glossaryOpen[term]=!glossaryOpen[term];
+  renderGlossary();
+}
+
+// ════════════════════════════════════════════════════
+// WEEKLY REVIEW
+// ════════════════════════════════════════════════════
+let weeklyReviews = JSON.parse(localStorage.getItem('twi_weekly')||'[]');
+let currentWeekOffset = 0;
+let weekRating = 0;
+
+const REVIEW_RULES=[
+  {id:'rvr_keyAreas',   label:'Traded key areas only — no chop'},
+  {id:'rvr_waited',     label:'Waited for setup triggers before entering'},
+  {id:'rvr_trimmed',    label:'Trimmed at T1 consistently'},
+  {id:'rvr_stopped',    label:'Stopped trading after hitting goals'},
+  {id:'rvr_noRevenge',  label:'No revenge trading all week'},
+  {id:'rvr_sizing',     label:'Followed sizing rules all week'},
+];
+
+function getWeekRange(offset){
+  const now=new Date();
+  const day=now.getDay();
+  const monday=new Date(now);
+  monday.setDate(now.getDate()-((day+6)%7)+(offset*7));
+  const friday=new Date(monday);
+  friday.setDate(monday.getDate()+4);
+  return{
+    start:monday.toISOString().split('T')[0],
+    end:friday.toISOString().split('T')[0],
+    label:monday.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' – '+friday.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+  };
+}
+
+function initWeeklyReview(){
+  renderWeeklyReview();
+}
+
+function prevWeek(){currentWeekOffset--;renderWeeklyReview();}
+function nextWeek(){if(currentWeekOffset<0){currentWeekOffset++;renderWeeklyReview();}}
+
+function renderWeeklyReview(){
+  const range=getWeekRange(currentWeekOffset);
+  document.getElementById('weekLabel').textContent=range.label;
+  const saved=weeklyReviews.find(r=>r.weekStart===range.start)||{};
+
+  // Auto-stats from journal
+  const weekTrades=trades.filter(t=>t.date>=range.start&&t.date<=range.end);
+  const weekPnl=weekTrades.reduce((s,t)=>s+t.pnl,0);
+  const weekWins=weekTrades.filter(t=>t.pnl>0).length;
+  const weekWr=weekTrades.length?Math.round((weekWins/weekTrades.length)*100):0;
+  const weekViols=violations.filter(v=>v.date>=range.start&&v.date<=range.end).length;
+  document.getElementById('weeklyStats').innerHTML=`
+    <div class="stat-box"><div class="stat-lbl">Week P&L</div><div class="stat-val" style="color:${weekPnl>=0?'var(--green)':'var(--danger)'}">${weekPnl>=0?'+':''}$${Math.abs(weekPnl).toFixed(0)}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Trades</div><div class="stat-val" style="color:var(--blue)">${weekTrades.length}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Win Rate</div><div class="stat-val" style="color:${weekWr>=55?'var(--green)':'var(--warn)'}">${weekWr}%</div></div>
+    <div class="stat-box"><div class="stat-lbl">Violations</div><div class="stat-val" style="color:${weekViols===0?'var(--green)':weekViols<=2?'var(--warn)':'var(--danger)'}">${weekViols}</div></div>`;
+
+  // Populate fields
+  document.getElementById('rvWorked').value=saved.worked||'';
+  document.getElementById('rvDidnt').value=saved.didnt||'';
+  document.getElementById('rvPsych').value=saved.psych||'';
+  document.getElementById('rvFocus').value=saved.focus||'';
+  document.getElementById('rvGoal').value=saved.goal||'';
+  document.getElementById('rvLessons').value=saved.lessons||'';
+  weekRating=saved.rating||0;
+
+  // Rule checks
+  document.getElementById('rvRuleChecks').innerHTML=REVIEW_RULES.map(r=>`
+    <div class="rv-rule-check">
+      <input type="checkbox" id="${r.id}" ${(saved.rules||{})[r.id]?'checked':''}>
+      <label for="${r.id}">${r.label}</label>
+    </div>`).join('');
+
+  // Rating buttons
+  const ratingEmojis=['','😞','😕','😐','🙂','😊','😁','💪','🔥','⚡','🏆'];
+  document.getElementById('weekRatingBtns').innerHTML=ratingEmojis.slice(1).map((e,i)=>`
+    <button class="week-rating-btn ${weekRating===i+1?'selected':''}" onclick="setWeekRating(${i+1},this)">${e}</button>`).join('');
+  document.getElementById('weekRatingLabel').textContent=weekRating?['','Rough','Tough','Okay','Decent','Good','Solid','Strong','Great','Excellent','Perfect'][weekRating]||'':'No rating yet';
+
+  // Past reviews
+  renderPastReviews();
+}
+
+function setWeekRating(r,el){
+  weekRating=r;
+  document.querySelectorAll('.week-rating-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  const labels=['','Rough','Tough','Okay','Decent','Good','Solid','Strong','Great','Excellent','Perfect'];
+  document.getElementById('weekRatingLabel').textContent=labels[r]||'';
+}
+
+function saveWeeklyReview(){
+  const range=getWeekRange(currentWeekOffset);
+  const rules={};
+  REVIEW_RULES.forEach(r=>{const el=document.getElementById(r.id);if(el)rules[r.id]=el.checked;});
+  const entry={
+    weekStart:range.start, weekEnd:range.end, weekLabel:range.label,
+    worked:document.getElementById('rvWorked').value,
+    didnt:document.getElementById('rvDidnt').value,
+    psych:document.getElementById('rvPsych').value,
+    focus:document.getElementById('rvFocus').value,
+    goal:document.getElementById('rvGoal').value,
+    lessons:document.getElementById('rvLessons').value,
+    rating:weekRating, rules,
+    savedAt:new Date().toISOString()
+  };
+  const idx=weeklyReviews.findIndex(r=>r.weekStart===range.start);
+  if(idx>=0) weeklyReviews[idx]=entry; else weeklyReviews.unshift(entry);
+  localStorage.setItem('twi_weekly',JSON.stringify(weeklyReviews));
+  const badge=document.getElementById('reviewSavedBadge');
+  badge.classList.add('show'); setTimeout(()=>badge.classList.remove('show'),2000);
+  renderPastReviews();
+}
+
+function renderPastReviews(){
+  const el=document.getElementById('pastReviews');
+  const past=weeklyReviews.filter(r=>r.weekStart!==getWeekRange(currentWeekOffset).start);
+  if(!past.length){el.innerHTML='<div style="font-size:13px;color:var(--muted)">No past reviews saved yet.</div>';return;}
+  const ratingEmojis=['','😞','😕','😐','🙂','😊','😁','💪','🔥','⚡','🏆'];
+  el.innerHTML=past.map(r=>`
+    <div class="past-review-card" onclick="loadPastReview('${r.weekStart}')">
+      <div class="prc-top">
+        <div class="prc-week">${r.weekLabel}</div>
+        ${r.rating?`<span style="font-size:16px">${ratingEmojis[r.rating]}</span>`:''}
+        <div style="margin-left:auto;font-size:12px;color:var(--muted)">${r.savedAt?new Date(r.savedAt).toLocaleDateString():''}</div>
+      </div>
+      ${r.focus?`<div class="prc-excerpt">🎯 Focus: ${r.focus.substring(0,80)}${r.focus.length>80?'...':''}</div>`:''}
+    </div>`).join('');
+}
+
+function loadPastReview(weekStart){
+  const idx=weeklyReviews.findIndex(r=>r.weekStart===weekStart);
+  if(idx<0) return;
+  // Calculate offset
+  const now=new Date();
+  const day=now.getDay();
+  const monday=new Date(now);
+  monday.setDate(now.getDate()-((day+6)%7));
+  const targetMonday=new Date(weekStart);
+  const diffDays=Math.round((targetMonday-monday)/(1000*60*60*24));
+  currentWeekOffset=Math.round(diffDays/7);
+  renderWeeklyReview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ════════════════════════════════════════════════════
+// UPDATE switchTab to include new panels
+// ════════════════════════════════════════════════════
+const _origSwitchTab = switchTab;
+function switchTab(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='strategies') renderStrategies();
+  if(name==='checklist') renderChecklist();
+  if(name==='dashboard') renderDashboard();
+  if(name==='journal') renderJournal();
+  if(name==='prep') initPrep();
+  if(name==='quiz') initQuizStart();
+  if(name==='checkin') initCheckin();
+  if(name==='violations') initViolations();
+  if(name==='glossary') initGlossary();
+  if(name==='weeklyreview') initWeeklyReview();
+}
 
 // ════════════════════════════════════════════════════
 // INIT
